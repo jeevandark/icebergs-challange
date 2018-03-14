@@ -1,0 +1,19 @@
+.App {
+  text-align: center;
+  width: 100%;
+}
+
+.svg-wrapper {
+  background-color: lightblue;
+  margin: 15px auto 10px auto;
+  border: 1px solid darkgray;
+}
+
+.svg-wrapper > svg {
+  transform-origin: 50% 50%;
+  transform: scale(1, -1);
+}
+
+.control-panel {
+  margin: 0 auto;
+}
