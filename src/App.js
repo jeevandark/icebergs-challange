@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import SeaMap from "./components/SeaMap";
 import "./App.css";
 import ControlPanel from "./components/ControlPanel";
+import { demoData } from "./demoData";
 
 class App extends Component {
 	static kMapHeight = 600;
@@ -9,47 +10,12 @@ class App extends Component {
 
 	constructor() {
 		super();
-		this.state = {
-			polygons: [
-				{
-					points: [
-						{
-							x: 220.5,
-							y: 10
-						},
-						{
-							x: 300,
-							y: 210
-						},
-						{
-							x: 170,
-							y: 250
-						},
-						{
-							x: 123,
-							y: 234
-						}
-					]
-				},
-				{
-					points: [
-						{
-							x: 100,
-							y: 30
-						},
-						{
-							x: 150,
-							y: 90
-						},
-						{
-							x: 120,
-							y: 110
-						}
-					]
-				}
-			]
-		};
+		this.state = {};
 	}
+
+	onDemoButtonClick = () => {
+		this.setState(demoData);
+	};
 
 	render() {
 		return (
@@ -57,9 +23,17 @@ class App extends Component {
 				<SeaMap
 					width={App.kMapAndControlPanelWidth}
 					height={App.kMapHeight}
-					polygons={this.state.polygons}
+					icebergs={this.state.icebergs}
+					sourcePoint={this.state.sourcePoint}
+					destinationPoint={this.state.destinationPoint}
 				/>
-				<ControlPanel width={App.kMapAndControlPanelWidth} />
+				<ControlPanel
+					width={App.kMapAndControlPanelWidth}
+					icebergs={this.state.icebergs}
+					sourcePoint={this.state.sourcePoint}
+					destinationPoint={this.state.destinationPoint}
+					onDemoButtonClick={this.onDemoButtonClick}
+				/>
 			</div>
 		);
 	}
