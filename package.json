@@ -1,17 +1,24 @@
 {
-	"name": "g-ch",
-	"version": "0.1.0",
-	"private": true,
-	"dependencies": {
-		"material-ui": "^0.20.0",
-		"react": "^16.2.0",
-		"react-dom": "^16.2.0",
-		"react-scripts": "1.1.1"
-	},
-	"scripts": {
-		"start": "react-scripts start",
-		"build": "react-scripts build",
-		"test": "react-scripts test --env=jsdom",
-		"eject": "react-scripts eject"
-	}
+  "name": "icebergs-challange",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Chen Ofek <lu.masahb@gmail.com>",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "material-ui": "^0.20.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-scripts": "1.1.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jeevandark/icebergs-challange"
+  }
 }
