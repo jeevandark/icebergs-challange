@@ -11,6 +11,15 @@ const kMyRoute = "/fsp";
 const app = express();
 // signal the server to parse requests as json:
 app.use(bodyParser.json());
+// allow CORS requests:
+app.use((req, res, next) => {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header(
+		"Access-Control-Allow-Headers",
+		"Origin, X_Requested-With, Content-Type, Accept"
+	);
+	next();
+});
 
 // listen for POST calls on the find-shortest-path route:
 app.post(kMyRoute, (req, res) => {

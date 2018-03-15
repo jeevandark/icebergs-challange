@@ -58,8 +58,8 @@ export const demoData = {
 		}
 	],
 	sourcePoint: {
-		x: 30,
-		y: 30
+		x: 50,
+		y: 200
 	},
 	destinationPoint: {
 		x: 570,

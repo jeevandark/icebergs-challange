@@ -22,6 +22,10 @@ class ControlPanel extends Component {
 			this.props.destinationPoint == null
 		) {
 			this.setState({ alertMissingParamsIsOpen: true });
+		} else {
+			if (this.props != null && this.props.onCalcShortestPath != null) {
+				this.props.onCalcShortestPath();
+			}
 		}
 	};
 

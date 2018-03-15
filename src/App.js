@@ -8,13 +8,46 @@ class App extends Component {
 	static kMapHeight = 600;
 	static kMapAndControlPanelWidth = 600;
 
+	static pathToApiFSPEndpoint = "http://localhost:4000/fsp/";
+
 	constructor() {
 		super();
 		this.state = {};
 	}
 
 	onDemoButtonClick = () => {
-		this.setState(demoData);
+		this.setState({ ...demoData, shortestPath: null });
+	};
+
+	onCalcShortestPath = () => {
+		// let myHeaders = new Headers();
+		// myHeaders.append("Content-Type", "application/json");
+		// myHeaders.append("Accept", "application/json, text/plain, */*");
+		let myInit = {
+			body: JSON.stringify(this.state), // cache: "no-cache", // body: this.state,
+			// credentials: "same-origin",
+			// headers: myHeaders,
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json, text/plain, */*"
+			},
+			method: "POST",
+			mode: "cors"
+		};
+		fetch(App.pathToApiFSPEndpoint, myInit)
+			.then(response => {
+				if (response.ok) {
+					return response.json();
+				} else {
+					return null;
+				}
+			})
+			.then(result => {
+				if (result == null) {
+					// todo: prompt the user that en error had occurred
+				}
+				this.setState({ shortestPath: result });
+			});
 	};
 
 	render() {
@@ -26,6 +59,7 @@ class App extends Component {
 					icebergs={this.state.icebergs}
 					sourcePoint={this.state.sourcePoint}
 					destinationPoint={this.state.destinationPoint}
+					shortestPath={this.state.shortestPath}
 				/>
 				<ControlPanel
 					width={App.kMapAndControlPanelWidth}
@@ -36,17 +70,18 @@ class App extends Component {
 					onFromPointCleared={this.handleFromPointCleared.bind(this)}
 					onToPointCleared={this.handleToPointCleared.bind(this)}
 					onIcebergModified={this.handleIcebergChange.bind(this)}
+					onCalcShortestPath={this.onCalcShortestPath.bind(this)}
 				/>
 			</div>
 		);
 	}
 
 	handleFromPointCleared() {
-		this.setState({ sourcePoint: null });
+		this.setState({ sourcePoint: null, shortestPath: null });
 	}
 
 	handleToPointCleared() {
-		this.setState({ destinationPoint: null });
+		this.setState({ destinationPoint: null, shortestPath: null });
 	}
 
 	handleIcebergChange(newIceberg, icebergToModify) {
@@ -62,7 +97,8 @@ class App extends Component {
 				newListOfIcebergs.splice(idxOfModified, 1);
 			}
 			this.setState({
-				icebergs: newListOfIcebergs
+				icebergs: newListOfIcebergs,
+				shortestPath: null
 			});
 		}
 	}

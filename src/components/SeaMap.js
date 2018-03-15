@@ -6,7 +6,11 @@ class SeaMap extends Component {
 
 	icebergStyle = { fill: "white", stroke: "white", strokeWidth: 1 };
 	mainStyle = { fill: "blue" };
-
+	styleForShortestPath = {
+		fill: "none",
+		stroke: "green",
+		strokeWidth: 2
+	};
 	render() {
 		return (
 			<div
@@ -26,6 +30,7 @@ class SeaMap extends Component {
 					{this.renderIcebergs()}
 					{this.renderSourcePoint()}
 					{this.renderDestinationPoint()}
+					{this.renderShortestPath()}
 				</svg>
 			</div>
 		);
@@ -93,6 +98,29 @@ class SeaMap extends Component {
 				</text>
 			</g>
 		);
+	}
+
+	renderShortestPath() {
+		if (
+			this.props != null &&
+			this.props.shortestPath != null &&
+			this.props.shortestPath.length > 0
+		) {
+			let pointListStr = this.props.shortestPath.reduce(
+				(prevStrVal, curPoint) => {
+					return prevStrVal + `${curPoint.x},${curPoint.y} `;
+				},
+				""
+			);
+			return (
+				<polyline
+					points={pointListStr}
+					style={this.styleForShortestPath}
+				/>
+			);
+		} else {
+			return null;
+		}
 	}
 
 	onClickHandler(evt) {
