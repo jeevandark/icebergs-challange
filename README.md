@@ -4,6 +4,12 @@
 
 Execute `npm install` in the project directory to install all dependecies.
 
+## Start the backend server
+
+Run this command in the project directory to start the http backend server:
+
+### `node server/index.js`
+
 ## Available Scripts
 
 ### `npm start`
@@ -17,7 +23,7 @@ You will also see any lint errors in the console.
 ### `npm test`
 
 Launches the test runner in the interactive watch mode.<br>
-Run `npm test -- --coverage` (note extra `--` in the middle) to include a coverage report.
+Run `npm test -- --coverage` (note the extra `--` in the middle) to include a coverage report.
 
 ### `npm run build`
 

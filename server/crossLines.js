@@ -1,33 +1,3 @@
-// calc the orientation of an ordered triplet (p, q, r)
-// returns:
-// 0 -> p, q and r are colinear
-// 1 -> Clockwise
-// 2 -> Counterclockwise
-const orientation = (p, q, r) => {
-	var retVal;
-	var val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-	if (val == 0) {
-		retVal = 0; // colinear
-	} else {
-		retVal = val > 0 ? 1 : 2; // clock-wise : counterclock-wise
-	}
-	return retVal;
-};
-
-// checks if point q lies on line segment 'pr' - for the colinear case:
-const onSegment = (p, q, r) => {
-	var retVal = false;
-	if (
-		q.x <= Math.max(p.x, r.x) &&
-		q.x >= Math.min(p.x, r.x) &&
-		q.y <= Math.max(p.y, r.y) &&
-		q.y >= Math.min(p.y, r.y)
-	) {
-		retVal = true;
-	}
-	return false;
-};
-
 // the main function - returns true if line segment p1-q1 and p2-q2 intersect:
 const doLinesIntersect = (p1, q1, p2, q2) => {
 	var retVal = false;
@@ -69,4 +39,37 @@ const doLinesIntersect = (p1, q1, p2, q2) => {
 
 module.exports = {
 	doLinesIntersect: doLinesIntersect
+};
+
+// helper functions
+// --------------------
+
+// calc the orientation of an ordered triplet (p, q, r)
+// returns:
+// 0 -> p, q and r are colinear
+// 1 -> Clockwise
+// 2 -> Counterclockwise
+const orientation = (p, q, r) => {
+	var retVal;
+	var val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+	if (val == 0) {
+		retVal = 0; // colinear
+	} else {
+		retVal = val > 0 ? 1 : 2; // clock-wise : counterclock-wise
+	}
+	return retVal;
+};
+
+// checks if point q lies on line segment 'pr' - for the colinear case:
+const onSegment = (p, q, r) => {
+	var retVal = false;
+	if (
+		q.x <= Math.max(p.x, r.x) &&
+		q.x >= Math.min(p.x, r.x) &&
+		q.y <= Math.max(p.y, r.y) &&
+		q.y >= Math.min(p.y, r.y)
+	) {
+		retVal = true;
+	}
+	return false;
 };
