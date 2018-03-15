@@ -33,9 +33,38 @@ class App extends Component {
 					sourcePoint={this.state.sourcePoint}
 					destinationPoint={this.state.destinationPoint}
 					onDemoButtonClick={this.onDemoButtonClick}
+					onFromPointCleared={this.handleFromPointCleared.bind(this)}
+					onToPointCleared={this.handleToPointCleared.bind(this)}
+					onIcebergModified={this.handleIcebergChange.bind(this)}
 				/>
 			</div>
 		);
+	}
+
+	handleFromPointCleared() {
+		this.setState({ sourcePoint: null });
+	}
+
+	handleToPointCleared() {
+		this.setState({ destinationPoint: null });
+	}
+
+	handleIcebergChange(newIceberg, icebergToModify) {
+		let idxOfModified = this.state.icebergs.findIndex(ice => {
+			return ice === icebergToModify;
+		});
+		if (idxOfModified >= 0) {
+			let newListOfIcebergs = this.state.icebergs.slice();
+			if (newIceberg != null) {
+				newListOfIcebergs[idxOfModified] = newIceberg;
+			} else {
+				// newIceberg is null - meaning we want to remove the other iceberg:
+				newListOfIcebergs.splice(idxOfModified, 1);
+			}
+			this.setState({
+				icebergs: newListOfIcebergs
+			});
+		}
 	}
 }
 

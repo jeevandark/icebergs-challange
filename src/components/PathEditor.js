@@ -5,7 +5,8 @@ class PathEditor extends Component {
 	render() {
 		return (
 			<div className="path-editor">
-				<div className="header-label">Path</div>
+				{" "}
+				<div className="header-label">Path</div>{" "}
 				{this.renderSourcePoint()}
 				{this.renderDestinationPoint()}
 			</div>
@@ -13,26 +14,31 @@ class PathEditor extends Component {
 	}
 
 	renderSourcePoint() {
-		if (this.props.sourcePoint != null) {
-			return (
-				<PointEditor label="Source" point={this.props.sourcePoint} />
-			);
-		} else {
-			return null;
-		}
+		return (
+			<PointEditor
+				onClearClick={this.onFromPointCleared.bind(this)}
+				label="From"
+				point={this.props.sourcePoint}
+			/>
+		);
 	}
 
 	renderDestinationPoint() {
-		if (this.props.destinationPoint != null) {
-			return (
-				<PointEditor
-					label="Destination"
-					point={this.props.destinationPoint}
-				/>
-			);
-		} else {
-			return null;
-		}
+		return (
+			<PointEditor
+				onClearClick={this.onToPointCleared.bind(this)}
+				label="To"
+				point={this.props.destinationPoint}
+			/>
+		);
+	}
+
+	onFromPointCleared() {
+		this.props.onFromPointCleared();
+	}
+
+	onToPointCleared() {
+		this.props.onToPointCleared();
 	}
 }
 

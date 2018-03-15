@@ -34,20 +34,23 @@ class SeaMap extends Component {
 	renderIcebergs() {
 		if (this.props != null && this.props.icebergs != null) {
 			return this.props.icebergs.map((item, idx) => {
-				let pointList = item.points.reduce((prevStr, curPoint) => {
-					return (
-						prevStr +
-						(prevStr === "" ? "" : " ") +
-						`${curPoint.x},${curPoint.y}`
-					);
-				}, "");
-				return (
+				let pointList = null;
+				if (item != null && item.points != null) {
+					pointList = item.points.reduce((prevStr, curPoint) => {
+						return (
+							prevStr +
+							(prevStr === "" ? "" : " ") +
+							`${curPoint.x},${curPoint.y}`
+						);
+					}, "");
+				}
+				return pointList != null ? (
 					<polygon
 						key={idx}
 						points={pointList}
 						style={this.icebergStyle}
 					/>
-				);
+				) : null;
 			});
 		} else {
 			return null;
