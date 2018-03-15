@@ -25,8 +25,14 @@ app.use((req, res, next) => {
 app.post(kMyRoute, (req, res) => {
 	// make sure that the request if valid:
 	if (!validateRequest(req.body)) {
+		console.log(
+			"The received request is not valid, please double-check it"
+		);
 		res.status(400).end();
 	} else {
+		console.log("\nReceived a valid request:");
+		console.log(JSON.stringify(req.body));
+
 		// transform the map into an undirected graph with distances as weights:
 		myGraph = transformMapToGraph(req.body);
 
@@ -45,6 +51,9 @@ app.post(kMyRoute, (req, res) => {
 				y: parseFloat(mySplit[1])
 			};
 		});
+
+		console.log("\nCalculated shortest path:");
+		console.log(JSON.stringify(myResult));
 
 		// return to the client:
 		res.json(myResult);
