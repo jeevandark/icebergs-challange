@@ -160,7 +160,13 @@ class PointEditor extends Component {
 
 	handleKeyDownOnInput(evt) {
 		if (evt.keyCode === 13) {
+			// enter
 			evt.target.blur();
+		} else if (evt.keyCode === 27) {
+			// esc
+			this.setState({
+				isInEdit: false
+			});
 		}
 	}
 }
