@@ -177,6 +177,7 @@ class ControlPanel extends Component {
 		this.setState({
 			selectedIceberg: iceberg
 		});
+		this.props.onSelectedIcebergChange(iceberg);
 	}
 
 	handleDemoButtonClick() {
@@ -225,6 +226,7 @@ class ControlPanel extends Component {
 					this.setState({
 						selectedIceberg: newIceberg
 					});
+					this.props.onSelectedIcebergChange(newIceberg);
 				}
 			}
 		}
@@ -258,6 +260,7 @@ class ControlPanel extends Component {
 						this.setState({
 							selectedIceberg: newIceberg
 						});
+						this.props.onSelectedIcebergChange(newIceberg);
 					}
 				}
 			}

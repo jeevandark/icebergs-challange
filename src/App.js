@@ -19,6 +19,12 @@ class App extends Component {
 		this.setState({ ...demoData, shortestPath: null });
 	};
 
+	onSelectedIcebergChange = newlySelectedIceberg => {
+		this.setState({
+			selectedIceberg: newlySelectedIceberg
+		});
+	};
+
 	onCalcShortestPath = () => {
 		let myInit = {
 			body: JSON.stringify(this.state),
@@ -56,6 +62,7 @@ class App extends Component {
 					sourcePoint={this.state.sourcePoint}
 					destinationPoint={this.state.destinationPoint}
 					shortestPath={this.state.shortestPath}
+					selectedIceberg={this.state.selectedIceberg}
 				/>
 				<ControlPanel
 					width={App.kMapAndControlPanelWidth}
@@ -68,6 +75,9 @@ class App extends Component {
 					onIcebergModified={this.handleIcebergChange.bind(this)}
 					onCalcShortestPath={this.onCalcShortestPath.bind(this)}
 					shortestPath={this.state.shortestPath}
+					onSelectedIcebergChange={this.onSelectedIcebergChange.bind(
+						this
+					)}
 				/>
 			</div>
 		);

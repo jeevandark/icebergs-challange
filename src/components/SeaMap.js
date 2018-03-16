@@ -5,6 +5,11 @@ class SeaMap extends Component {
 	myHeight = this.props.height == null ? 600 : this.props.height;
 
 	icebergStyle = { fill: "white", stroke: "white", strokeWidth: 1 };
+	icebergSelectedStyle = {
+		fill: "white",
+		stroke: "deepSkyBlue",
+		strokeWidth: 2
+	};
 	mainStyle = { fill: "blue" };
 	styleForShortestPath = {
 		fill: "none",
@@ -53,13 +58,18 @@ class SeaMap extends Component {
 					<polygon
 						key={idx}
 						points={pointList}
-						style={this.icebergStyle}
+						style={this.determinePolygonStyle.call(this, item)}
 					/>
 				) : null;
 			});
 		} else {
 			return null;
 		}
+	}
+
+	determinePolygonStyle(curPolygon) {
+		let isSelected = this.props.selectedIceberg === curPolygon;
+		return isSelected ? this.icebergSelectedStyle : this.icebergStyle;
 	}
 
 	renderSourcePoint() {

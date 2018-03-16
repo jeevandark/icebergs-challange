@@ -41,8 +41,6 @@ class PointEditor extends Component {
 	}
 
 	handleOnBlur() {
-		console.log(this, this.xInput);
-
 		window.setTimeout(() => {
 			if (
 				document.activeElement !== this.xInput &&
