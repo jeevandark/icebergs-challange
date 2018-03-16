@@ -76,55 +76,70 @@ class ControlPanel extends Component {
 				)}
 			/>
 		];
+		const resultPanelClassNames = `result-panel ${
+			this.props.shortestPath != null ? "shown" : ""
+		}`;
 		return (
 			<MuiThemeProvider>
-				<div className="control-panel" style={this.mainStyle}>
-					{this.renderIcebergPanel()}
-					<PathEditor
-						sourcePoint={this.props.sourcePoint}
-						destinationPoint={this.props.destinationPoint}
-						onFromPointCleared={this.props.onFromPointCleared}
-						onToPointCleared={this.props.onToPointCleared}
-					/>
-					<div className="buttons-pad">
-						<RaisedButton
-							label="Demo"
-							default={true}
-							onClick={this.props.onDemoButtonClick}
-							className="demo-button"
+				<div>
+					<div className="control-panel" style={this.mainStyle}>
+						{this.renderIcebergPanel()}
+						<PathEditor
+							sourcePoint={this.props.sourcePoint}
+							destinationPoint={this.props.destinationPoint}
+							onFromPointChange={this.props.onFromPointChange}
+							onToPointChange={this.props.onToPointChange}
 						/>
-						<RaisedButton
-							label="Find shortest path"
-							primary={true}
-							onClick={this.handleFindShortestPathClick}
-							className="fsp-button"
-						/>
+						<div className="buttons-pad">
+							<RaisedButton
+								label="Demo"
+								default={true}
+								onClick={this.handleDemoButtonClick.bind(this)}
+								className="demo-button"
+							/>
+							<RaisedButton
+								label="Find shortest path"
+								primary={true}
+								onClick={this.handleFindShortestPathClick}
+								className="fsp-button"
+							/>
+							<Dialog
+								actions={actionsMissingParamsAlert}
+								modal={false}
+								open={this.state.alertMissingParamsIsOpen}
+							>
+								<div className="alert-text">
+									Please define the start and destination
+									points
+								</div>
+							</Dialog>
+						</div>
 						<Dialog
-							actions={actionsMissingParamsAlert}
+							actions={
+								actionsPromptRemoveIcebergWhenRemovingOneOfOnlyThreePoints
+							}
 							modal={false}
-							open={this.state.alertMissingParamsIsOpen}
+							open={
+								this.state
+									.alertApproveRemoveIcebergWhenRemovingOneOfOnlyThreePoints
+							}
 						>
 							<div className="alert-text">
-								Please define the start and destination points
+								An iceberg cannot have less than three points.<br />
+								<br />
+								Whould you like to remove the selected iceberg?
 							</div>
 						</Dialog>
 					</div>
-					<Dialog
-						actions={
-							actionsPromptRemoveIcebergWhenRemovingOneOfOnlyThreePoints
-						}
-						modal={false}
-						open={
-							this.state
-								.alertApproveRemoveIcebergWhenRemovingOneOfOnlyThreePoints
-						}
+					<div
+						className={resultPanelClassNames}
+						style={this.mainStyle}
 					>
-						<div className="alert-text">
-							An iceberg cannot have less than three points.<br />
-							<br />
-							Whould you like to remove the selected iceberg?
+						<div className="header-label">Result</div>
+						<div className="result-content">
+							{this.renderShortestPath()}
 						</div>
-					</Dialog>
+					</div>
 				</div>
 			</MuiThemeProvider>
 		);
@@ -164,6 +179,13 @@ class ControlPanel extends Component {
 		});
 	}
 
+	handleDemoButtonClick() {
+		this.setState({
+			selectedIceberg: null
+		});
+		this.props.onDemoButtonClick();
+	}
+
 	renderPointsList() {
 		if (
 			this.state.selectedIceberg != null &&
@@ -175,11 +197,36 @@ class ControlPanel extends Component {
 						key={pIdx}
 						onClearClick={this.handlePointCleared.bind(this, pItem)}
 						point={pItem}
+						onChange={this.handleVertexChange.bind(this, pItem)}
 					/>
 				);
 			});
 		} else {
 			return null;
+		}
+	}
+
+	handleVertexChange(oldPoint, newPoint) {
+		let selIceberg = this.state.selectedIceberg;
+		if (selIceberg != null && selIceberg.points != null) {
+			// find the point in the points array:
+			let idxOfPoint = selIceberg.points.findIndex(item => {
+				return item.x === oldPoint.x && item.y === oldPoint.y;
+			});
+			if (idxOfPoint >= 0) {
+				let newPointsArr = selIceberg.points.slice();
+				newPointsArr[idxOfPoint] = newPoint;
+				let newIceberg = { points: newPointsArr };
+				if (
+					this.props != null &&
+					this.props.onIcebergModified != null
+				) {
+					this.props.onIcebergModified(newIceberg, selIceberg);
+					this.setState({
+						selectedIceberg: newIceberg
+					});
+				}
+			}
 		}
 	}
 
@@ -216,6 +263,21 @@ class ControlPanel extends Component {
 			}
 		}
 	};
+
+	renderShortestPath() {
+		if (this.props != null && this.props.shortestPath != null) {
+			return this.props.shortestPath.map((myPoint, myIdx) => {
+				return (
+					<span key={myIdx}>
+						[{myPoint.x}, {myPoint.y}]{myIdx <
+						this.props.shortestPath.length - 1
+							? ", "
+							: ""}
+					</span>
+				);
+			});
+		}
+	}
 }
 
 export default ControlPanel;

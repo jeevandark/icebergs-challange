@@ -20,13 +20,8 @@ class App extends Component {
 	};
 
 	onCalcShortestPath = () => {
-		// let myHeaders = new Headers();
-		// myHeaders.append("Content-Type", "application/json");
-		// myHeaders.append("Accept", "application/json, text/plain, */*");
 		let myInit = {
-			body: JSON.stringify(this.state), // cache: "no-cache", // body: this.state,
-			// credentials: "same-origin",
-			// headers: myHeaders,
+			body: JSON.stringify(this.state),
 			headers: {
 				"Content-Type": "application/json",
 				Accept: "application/json, text/plain, */*"
@@ -53,6 +48,7 @@ class App extends Component {
 	render() {
 		return (
 			<div className="App">
+				<h3 style={{ margin: "3px 0" }}>The Icebergs Challange</h3>
 				<SeaMap
 					width={App.kMapAndControlPanelWidth}
 					height={App.kMapHeight}
@@ -67,21 +63,22 @@ class App extends Component {
 					sourcePoint={this.state.sourcePoint}
 					destinationPoint={this.state.destinationPoint}
 					onDemoButtonClick={this.onDemoButtonClick}
-					onFromPointCleared={this.handleFromPointCleared.bind(this)}
-					onToPointCleared={this.handleToPointCleared.bind(this)}
+					onFromPointChange={this.handleFromPointChange.bind(this)}
+					onToPointChange={this.handleToPointChange.bind(this)}
 					onIcebergModified={this.handleIcebergChange.bind(this)}
 					onCalcShortestPath={this.onCalcShortestPath.bind(this)}
+					shortestPath={this.state.shortestPath}
 				/>
 			</div>
 		);
 	}
 
-	handleFromPointCleared() {
-		this.setState({ sourcePoint: null, shortestPath: null });
+	handleFromPointChange(newVal) {
+		this.setState({ sourcePoint: newVal, shortestPath: null });
 	}
 
-	handleToPointCleared() {
-		this.setState({ destinationPoint: null, shortestPath: null });
+	handleToPointChange(newVal) {
+		this.setState({ destinationPoint: newVal, shortestPath: null });
 	}
 
 	handleIcebergChange(newIceberg, icebergToModify) {

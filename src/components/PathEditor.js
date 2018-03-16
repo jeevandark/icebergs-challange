@@ -19,6 +19,7 @@ class PathEditor extends Component {
 				onClearClick={this.onFromPointCleared.bind(this)}
 				label="From"
 				point={this.props.sourcePoint}
+				onChange={this.onFromPointChange.bind(this)}
 			/>
 		);
 	}
@@ -29,16 +30,25 @@ class PathEditor extends Component {
 				onClearClick={this.onToPointCleared.bind(this)}
 				label="To"
 				point={this.props.destinationPoint}
+				onChange={this.onToPointChange.bind(this)}
 			/>
 		);
 	}
 
 	onFromPointCleared() {
-		this.props.onFromPointCleared();
+		this.props.onFromPointChange(null);
 	}
 
 	onToPointCleared() {
-		this.props.onToPointCleared();
+		this.props.onToPointChange(null);
+	}
+
+	onFromPointChange(newVal) {
+		this.props.onFromPointChange(newVal);
+	}
+
+	onToPointChange(newVal) {
+		this.props.onToPointChange(newVal);
 	}
 }
 

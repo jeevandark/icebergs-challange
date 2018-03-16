@@ -1,265 +1,320 @@
 .App {
-    text-align: center;
-    width: 100%;
-    color: #666666;
+	text-align: center;
+	width: 100%;
+	color: #666666;
 }
 
 .svg-wrapper {
-    background-color: lightblue;
-    margin: 15px auto 10px auto;
-    border: 1px solid darkgray;
-    border-radius: 3px;
+	background-color: lightblue;
+	margin: 5px auto 10px auto;
+	border: 1px solid darkgray;
+	border-radius: 3px;
+	user-select: none;
 }
 
-.svg-wrapper>svg {
-    transform-origin: 50% 50%;
-    transform: scale(1, -1);
+.svg-wrapper > svg {
+	transform-origin: 50% 50%;
+	transform: scale(1, -1);
+}
+
+input {
+	color: #555555;
 }
 
 .control-panel {
-    margin: 0 auto;
-    position: relative;
-    height: 162px;
+	margin: 0 auto;
+	position: relative;
+	height: 162px;
+	user-select: none;
 }
 
 .control-panel .iceberg-list {
-    width: 50%;
-    border: 1px solid lightgray;
-    border-radius: 3px;
-    height: 160px;
-    position: absolute;
-    left: -1px;
+	width: 50%;
+	border: 1px solid lightgray;
+	border-radius: 3px;
+	height: 160px;
+	position: absolute;
+	left: -1px;
+}
+
+.control-panel .iceberg-list .header-label {
+	text-align: left;
+	padding-left: 43px;
 }
 
 .control-panel .iceberg-list .inner-list {
-    position: absolute;
-    top: 30px;
-    left: 0;
-    bottom: 0;
-    border-right: 1px solid gainsboro;
-    width: 35%;
-    overflow-y: auto;
+	position: absolute;
+	top: 30px;
+	left: 0;
+	bottom: 0;
+	border-right: 1px solid gainsboro;
+	width: 45%;
+	overflow-y: auto;
 }
 
 .control-panel .iceberg-list .iceberg-entry {
-    padding: 3px 5px;
-    text-align: left;
-    font-size: 14px;
-    line-height: 16px;
-    cursor: pointer;
-    user-select: none;
+	padding: 3px 5px;
+	text-align: left;
+	font-size: 14px;
+	line-height: 16px;
+	cursor: pointer;
+	user-select: none;
 }
 
 .control-panel .iceberg-list .iceberg-entry.selected {
-    background-color: #d9e8ec;
+	background-color: #d9e8ec;
 }
 
-.control-panel .header-label {
-    font-size: 18px;
-    line-height: 24px;
-    padding: 2px 3px;
-    background-color: gainsboro;
-    color: gray;
-    font-size: bold;
-    user-select: none;
+.header-label {
+	font-size: 18px;
+	line-height: 24px;
+	padding: 2px 3px;
+	background-color: gainsboro;
+	color: gray;
+	font-size: bold;
+	user-select: none;
 }
 
 .control-panel .path-editor {
-    width: 49%;
-    border: 1px solid lightgray;
-    border-radius: 3px;
-    height: 120px;
-    position: absolute;
-    right: 0;
-    text-align: left;
+	width: 49%;
+	border: 1px solid lightgray;
+	border-radius: 3px;
+	height: 120px;
+	position: absolute;
+	right: 0;
+	text-align: left;
 }
 
 .path-editor .header-label {
-    text-align: center;
+	text-align: center;
 }
 
 .control-panel .buttons-pad {
-    width: 49%;
-    border-radius: 3px;
-    height: 36px;
-    position: absolute;
-    right: 0;
-    bottom: 0;
+	width: 49%;
+	border-radius: 3px;
+	height: 36px;
+	position: absolute;
+	right: 0;
+	bottom: 0;
 }
 
 .control-panel .buttons-pad .demo-button {
-    color: #666666 !important;
-    position: relative;
-    left: -2px;
-    width: 107px;
-    top: -1px;
+	color: #666666 !important;
+	position: relative;
+	left: -2px;
+	width: 107px;
+	top: -1px;
 }
 
 .control-panel .buttons-pad .demo-button button {
-    height: 35px !important;
-    width: 107px !important;
+	height: 35px !important;
+	width: 107px !important;
 }
 
 .control-panel .buttons-pad .demo-button button span {
-    color: #666666 !important;
+	color: #666666 !important;
 }
 
 .control-panel .buttons-pad .fsp-button {
-    color: #666666 !important;
-    right: -2px;
-    position: relative;
-    top: -1px;
+	color: #666666 !important;
+	right: -2px;
+	position: relative;
+	top: -1px;
 }
 
 .point-editor-label {
-    display: inline-block;
-    min-width: 80px;
+	display: inline-block;
+	min-width: 80px;
 }
 
 .point-editor {
-    padding-left: 50px;
-    height: 36px;
-    line-height: 36px;
-    white-space: nowrap;
+	padding-left: 50px;
+	height: 36px;
+	line-height: 36px;
+	white-space: nowrap;
 }
 
-.point-editor.is-null {}
+.point-editor.is-null {
+}
 
 .point-editor:nth-child(2) {
-    margin-top: 10px;
+	margin-top: 10px;
 }
 
 .point-coordinates,
 .point-editor-label {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 .point-coordinates {
-    position: relative;
-    top: 1px;
+	position: relative;
+	top: 1px;
+}
+
+.editable-coordinate {
+	width: 34px;
+	font-size: 14px;
 }
 
 .point-editor.is-null .point-editor-label,
 .point-editor.is-null .point-coordinates {
-    color: #bbbbbb;
+	color: #bbbbbb;
 }
 
 @keyframes fade-in {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 0.5;
+	}
 }
 
 .point-buttons {
-    animation: 300ms fade-in ease-in backwards;
+	animation: 300ms fade-in ease-in backwards;
+	transition: 300ms opacity ease;
+	opacity: 0.5;
+}
+
+.point-buttons:hover {
+	opacity: 1;
 }
 
 .point-buttons button {
-    padding: 2px !important;
-    color: #999999;
-    height: 36px !important;
-    line-height: 36px !important;
-    width: 32px !important;
+	padding: 2px !important;
+	color: #999999;
+	height: 36px !important;
+	line-height: 36px !important;
+	width: 32px !important;
 }
 
 .point-buttons i.material-icons {
-    height: 24px;
-    width: 24px;
-    position: relative;
-    top: 5px;
-    left: 1px;
-    font-size: 18px;
+	height: 24px;
+	width: 24px;
+	position: relative;
+	top: 5px;
+	left: 1px;
+	font-size: 18px;
 }
 
 .point-editor.is-null .point-buttons i.material-icons {
-    height: 24px;
-    width: 24px;
+	height: 24px;
+	width: 24px;
 }
 
 .alert-text {
-    text-align: center;
-    font-weight: bold;
+	text-align: center;
+	font-weight: bold;
 }
 
 .points-list {
-    display: inline-block;
-    width: 65%;
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    top: 26px;
-    overflow-y: auto;
+	display: inline-block;
+	width: 55%;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	top: 26px;
+	overflow-y: auto;
 }
 
 .points-list .point-editor {
-    font-size: 14px;
-    padding-left: 10px;
-    line-height: 20px;
-    height: 20px;
-    text-align: left;
+	font-size: 14px;
+	padding-left: 10px;
+	line-height: 20px;
+	height: 20px;
+	text-align: left;
+}
+
+.points-list .point-editor .editable-coordinate {
+	font-size: 13px;
+	padding: 0 !important;
 }
 
 .points-list .point-editor .point-buttons button {
-    height: 28px !important;
-    line-height: 28px !important;
-    /* width: 32px !important; */
+	height: 28px !important;
+	line-height: 28px !important;
+	/* width: 32px !important; */
 }
 
 .points-list .point-editor .point-buttons i.material-icons {
-    position: relative;
-    top: 5px;
-    left: 0;
-    font-size: 16px;
+	position: relative;
+	top: 5px;
+	left: 0;
+	font-size: 16px;
 }
 
 .points-list .point-editor:nth-child(2) {
-    margin-top: 0;
+	margin-top: 0;
 }
 
+.result-panel {
+	clear: both;
+	display: block;
+	margin: 0 auto;
+	position: relative;
+	top: 3px;
+	height: 70px;
+	border: 1px solid gainsboro;
+	opacity: 0;
+	transition: 350ms opacity ease;
+}
+
+.result-panel.shown {
+	opacity: 1;
+}
+
+.result-panel .header-label {
+	text-align: left;
+	padding-left: 50px;
+}
+
+.result-content {
+	text-align: left;
+	padding: 3px 5px;
+	font-size: 15px;
+	overflow-y: auto;
+}
 
 /* scrollbar styling: */
 
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+	width: 8px;
+	height: 8px;
 }
 
 ::-webkit-scrollbar-button {
-    width: 6px;
-    height: 6px;
+	width: 6px;
+	height: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #e1e1e1;
-    border: 0px none #ffffff;
-    border-radius: 3px;
+	background: #e1e1e1;
+	border: 0px none #ffffff;
+	border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #e5e5e5;
+	background: #e5e5e5;
 }
 
 ::-webkit-scrollbar-thumb:active {
-    background: #bbbbbb;
+	background: #bbbbbb;
 }
 
 ::-webkit-scrollbar-track {
-    background: #999999;
-    border: 0px none #ffffff;
-    border-radius: 3px;
+	background: #999999;
+	border: 0px none #ffffff;
+	border-radius: 3px;
 }
 
 ::-webkit-scrollbar-track:hover {
-    background: #999999;
+	background: #999999;
 }
 
 ::-webkit-scrollbar-track:active {
-    background: #999999;
+	background: #999999;
 }
 
 ::-webkit-scrollbar-corner {
-    background: transparent;
+	background: transparent;
 }
