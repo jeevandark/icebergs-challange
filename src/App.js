@@ -33,11 +33,27 @@ class App extends Component {
 	}
 
 	onDemoButtonClick = () => {
+		let chkStr = null;
+		if (this.state.selectedIceberg != null) {
+			chkStr = JSON.stringify(this.state.selectedIceberg);
+		}
 		this.setState({
 			...demoData,
 			shortestPath: null,
 			selectedIceberg: null
 		});
+		setTimeout(() => {
+			this.onCalcShortestPath();
+			if (chkStr != null) {
+				// try to find the previously selected iceberg in the new state:
+				for (const ice of this.state.icebergs) {
+					let curStr = JSON.stringify(ice);
+					if (curStr === chkStr) {
+						this.setState({ selectedIceberg: ice });
+					}
+				}
+			}
+		}, 50);
 	};
 
 	onSelectedIcebergChange = newlySelectedIceberg => {

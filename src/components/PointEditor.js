@@ -48,13 +48,20 @@ class PointEditor extends Component {
 			) {
 				if (this.props != null && this.props.onChange != null) {
 					if (this.xInput != null && this.yInput != null) {
-						this.props.onChange(
-							{
-								x: parseFloat(this.xInput.value),
-								y: parseFloat(this.yInput.value)
-							},
-							this.props.point
-						);
+						let areEqual =
+							this.props.point.x.toString() ===
+								this.xInput.value.toString() &&
+							this.props.point.y.toString() ===
+								this.yInput.value.toString();
+						if (!areEqual) {
+							this.props.onChange(
+								{
+									x: parseFloat(this.xInput.value),
+									y: parseFloat(this.yInput.value)
+								},
+								this.props.point
+							);
+						}
 					}
 				}
 				this.setState({

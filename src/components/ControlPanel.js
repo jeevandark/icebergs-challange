@@ -23,7 +23,9 @@ class ControlPanel extends Component {
 			this.setState({ alertMissingParamsIsOpen: true });
 		} else {
 			if (this.props != null && this.props.onCalcShortestPath != null) {
-				this.props.onCalcShortestPath();
+				setTimeout(() => {
+					this.props.onCalcShortestPath();
+				}, 50);
 			}
 		}
 	};
