@@ -108,6 +108,7 @@ class App extends Component {
 					destinationPoint={this.state.destinationPoint}
 					shortestPath={this.state.shortestPath}
 					selectedIceberg={this.state.selectedIceberg}
+					onClickOnMap={this.handleClickOnMap.bind(this)}
 				/>
 				<ControlPanel
 					width={App.kMapAndControlPanelWidth}
@@ -164,6 +165,26 @@ class App extends Component {
 			selectedIceberg: null,
 			shortestPath: null
 		});
+	}
+
+	handleClickOnMap(evt) {
+		if (evt.target.tagName === "polygon") {
+			let pntStr = evt.target.getAttribute("points");
+			for (const ice of this.state.icebergs) {
+				let chkStr = ice.points.reduce((prevVal, curVal, curIdx) => {
+					return `${prevVal}${curIdx > 0 ? " " : ""}${curVal.x},${
+						curVal.y
+					}`;
+				}, "");
+				let isTheSame = pntStr === chkStr;
+				if (isTheSame) {
+					this.setState({
+						selectedIceberg: ice
+					});
+					break;
+				}
+			}
+		}
 	}
 }
 

@@ -24,7 +24,7 @@ class SeaMap extends Component {
 					width: `${this.myWidth}px`,
 					height: `${this.myHeight}px`
 				}}
-				onClick={this.onClickHandler.bind(this)}
+				onClick={this.props.onClickOnMap}
 			>
 				<svg
 					height={`${this.myHeight}`}
@@ -131,10 +131,6 @@ class SeaMap extends Component {
 		} else {
 			return null;
 		}
-	}
-
-	onClickHandler(evt) {
-		// console.log(evt, evt.clientX, evt.clientY);
 	}
 }
 
