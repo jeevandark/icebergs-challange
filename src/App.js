@@ -124,6 +124,7 @@ class App extends Component {
 					onSelectedIcebergChange={this.onSelectedIcebergChange.bind(
 						this
 					)}
+					onClearAllIcebergs={this.handleClearAllIcebergs.bind(this)}
 				/>
 			</div>
 		);
@@ -155,6 +156,14 @@ class App extends Component {
 				selectedIceberg: newIceberg
 			});
 		}
+	}
+
+	handleClearAllIcebergs() {
+		this.setState({
+			icebergs: null,
+			selectedIceberg: null,
+			shortestPath: null
+		});
 	}
 }
 

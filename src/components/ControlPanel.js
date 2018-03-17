@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import { RaisedButton, Dialog } from "material-ui";
+import { RaisedButton, Dialog, IconButton } from "material-ui";
 import PathEditor from "./PathEditor";
 import PointEditor from "./PointEditor";
 
@@ -147,6 +147,14 @@ class ControlPanel extends Component {
 		return (
 			<div className="iceberg-list">
 				<div className="header-label">Icebergs</div>
+				<IconButton
+					iconClassName="material-icons"
+					tooltip="Clear all icebergs"
+					className="clear-all-button"
+					onClick={this.props.onClearAllIcebergs}
+				>
+					clear_all
+				</IconButton>
 				<div className="inner-list">{this.renderIcebergList()}</div>
 				<div className="points-list">{this.renderPointsList()}</div>
 			</div>

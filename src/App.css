@@ -42,6 +42,15 @@ input {
 	padding-left: 43px;
 }
 
+.control-panel .iceberg-list .clear-all-button {
+	position: absolute !important;
+	top: 0 !important;
+	right: 0 !important;
+	padding: 2px !important;
+	width: 38px !important;
+	height: 28px !important;
+}
+
 .control-panel .iceberg-list .inner-list {
 	position: absolute;
 	top: 30px;
@@ -273,6 +282,10 @@ input {
 	padding: 3px 5px;
 	font-size: 15px;
 	overflow-y: auto;
+}
+
+.clear-all-button .material-icons {
+	color: gray !important;
 }
 
 /* scrollbar styling: */
