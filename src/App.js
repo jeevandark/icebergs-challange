@@ -7,12 +7,18 @@ import { demoData } from "./demoData";
 class App extends Component {
 	static kMapHeight = 600;
 	static kMapAndControlPanelWidth = 600;
-
+	static keyForStateInSessionStorage = "keyState";
 	static pathToApiFSPEndpoint = "http://localhost:4000/fsp/";
 
 	constructor() {
 		super();
-		this.state = {};
+		// load state from session storage - to prevent a reset upon page refresh:
+		let tmpStr = sessionStorage.getItem(App.keyForStateInSessionStorage);
+		if (tmpStr != null) {
+			this.state = JSON.parse(tmpStr);
+		} else {
+			this.state = {};
+		}
 	}
 
 	onDemoButtonClick = () => {
@@ -24,6 +30,14 @@ class App extends Component {
 			selectedIceberg: newlySelectedIceberg
 		});
 	};
+
+	componentWillUpdate(nextProps, nextState) {
+		// save state to session storage - to prevent reset upon page refresh:
+		sessionStorage.setItem(
+			App.keyForStateInSessionStorage,
+			JSON.stringify(nextState)
+		);
+	}
 
 	onCalcShortestPath = () => {
 		let myInit = {
