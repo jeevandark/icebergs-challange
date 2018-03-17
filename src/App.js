@@ -16,13 +16,28 @@ class App extends Component {
 		let tmpStr = sessionStorage.getItem(App.keyForStateInSessionStorage);
 		if (tmpStr != null) {
 			this.state = JSON.parse(tmpStr);
+			if (this.state.selectedIceberg != null) {
+				// properly set the reference to the selected iceberg:
+				let selAsStr = JSON.stringify(this.state.selectedIceberg);
+				for (const ice of this.state.icebergs) {
+					let curAsStr = JSON.stringify(ice);
+					let areEqual = selAsStr === curAsStr;
+					if (areEqual) {
+						this.state.selectedIceberg = ice;
+					}
+				}
+			}
 		} else {
 			this.state = {};
 		}
 	}
 
 	onDemoButtonClick = () => {
-		this.setState({ ...demoData, shortestPath: null });
+		this.setState({
+			...demoData,
+			shortestPath: null,
+			selectedIceberg: null
+		});
 	};
 
 	onSelectedIcebergChange = newlySelectedIceberg => {
@@ -89,6 +104,7 @@ class App extends Component {
 					onIcebergModified={this.handleIcebergChange.bind(this)}
 					onCalcShortestPath={this.onCalcShortestPath.bind(this)}
 					shortestPath={this.state.shortestPath}
+					selectedIceberg={this.state.selectedIceberg}
 					onSelectedIcebergChange={this.onSelectedIcebergChange.bind(
 						this
 					)}
@@ -114,12 +130,13 @@ class App extends Component {
 			if (newIceberg != null) {
 				newListOfIcebergs[idxOfModified] = newIceberg;
 			} else {
-				// newIceberg is null - meaning we want to remove the other iceberg:
+				// newIceberg is null - meaning we want a removal:
 				newListOfIcebergs.splice(idxOfModified, 1);
 			}
 			this.setState({
 				icebergs: newListOfIcebergs,
-				shortestPath: null
+				shortestPath: null,
+				selectedIceberg: newIceberg
 			});
 		}
 	}

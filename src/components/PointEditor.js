@@ -61,7 +61,7 @@ class PointEditor extends Component {
 					isInEdit: false
 				});
 			}
-		}, 100);
+		}, 80);
 	}
 
 	handleEnterEditMode(isClickOnY, evt) {
@@ -74,7 +74,7 @@ class PointEditor extends Component {
 				myElem.focus();
 				myElem.select();
 			}
-		}, 200);
+		}, 100);
 	}
 
 	renderLabel() {

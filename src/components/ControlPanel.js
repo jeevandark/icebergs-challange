@@ -11,7 +11,6 @@ class ControlPanel extends Component {
 	};
 
 	state = {
-		selectedIceberg: null,
 		alertMissingParamsIsOpen: false,
 		alertApproveRemoveIcebergWhenRemovingOneOfOnlyThreePoints: false
 	};
@@ -34,12 +33,9 @@ class ControlPanel extends Component {
 	};
 
 	handleApproveRemoveIcebergWhenRemovingOneOfOnlyThreePoints = () => {
-		let selIceberg = this.state.selectedIceberg;
+		let selIceberg = this.props.selectedIceberg;
 		if (this.props != null && this.props.onIcebergModified != null) {
 			this.props.onIcebergModified(null, selIceberg);
-			this.setState({
-				selectedIceberg: null
-			});
 		}
 		this.setState({
 			alertApproveRemoveIcebergWhenRemovingOneOfOnlyThreePoints: false
@@ -158,7 +154,7 @@ class ControlPanel extends Component {
 	renderIcebergList() {
 		if (this.props != null && this.props.icebergs != null) {
 			return this.props.icebergs.map((item, idx) => {
-				let isSelected = this.state.selectedIceberg === item;
+				let isSelected = this.props.selectedIceberg === item;
 				let strClass = `iceberg-entry ${isSelected ? "selected" : ""}`;
 				return (
 					<div
@@ -174,25 +170,19 @@ class ControlPanel extends Component {
 	}
 
 	handleIcebergClick(iceberg) {
-		this.setState({
-			selectedIceberg: iceberg
-		});
 		this.props.onSelectedIcebergChange(iceberg);
 	}
 
 	handleDemoButtonClick() {
-		this.setState({
-			selectedIceberg: null
-		});
 		this.props.onDemoButtonClick();
 	}
 
 	renderPointsList() {
 		if (
-			this.state.selectedIceberg != null &&
-			this.state.selectedIceberg.points != null
+			this.props.selectedIceberg != null &&
+			this.props.selectedIceberg.points != null
 		) {
-			return this.state.selectedIceberg.points.map((pItem, pIdx) => {
+			return this.props.selectedIceberg.points.map((pItem, pIdx) => {
 				return (
 					<PointEditor
 						key={pIdx}
@@ -208,7 +198,7 @@ class ControlPanel extends Component {
 	}
 
 	handleVertexChange(oldPoint, newPoint) {
-		let selIceberg = this.state.selectedIceberg;
+		let selIceberg = this.props.selectedIceberg;
 		if (selIceberg != null && selIceberg.points != null) {
 			// find the point in the points array:
 			let idxOfPoint = selIceberg.points.findIndex(item => {
@@ -223,9 +213,6 @@ class ControlPanel extends Component {
 					this.props.onIcebergModified != null
 				) {
 					this.props.onIcebergModified(newIceberg, selIceberg);
-					this.setState({
-						selectedIceberg: newIceberg
-					});
 					this.props.onSelectedIcebergChange(newIceberg);
 				}
 			}
@@ -233,7 +220,7 @@ class ControlPanel extends Component {
 	}
 
 	handlePointCleared = removedPoint => {
-		let selIceberg = this.state.selectedIceberg;
+		let selIceberg = this.props.selectedIceberg;
 		if (selIceberg != null && selIceberg.points != null) {
 			if (selIceberg.points.length === 3) {
 				// cannot remove a point from a 3-pointed polygon
@@ -257,9 +244,6 @@ class ControlPanel extends Component {
 						this.props.onIcebergModified != null
 					) {
 						this.props.onIcebergModified(newIceberg, selIceberg);
-						this.setState({
-							selectedIceberg: newIceberg
-						});
 						this.props.onSelectedIcebergChange(newIceberg);
 					}
 				}
