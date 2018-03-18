@@ -16,6 +16,14 @@ class SeaMap extends Component {
 		stroke: "green",
 		strokeWidth: 2
 	};
+	styleForIcebergInCreation = {
+		fill: "none",
+		stroke: "white",
+		strokeWidth: 2
+	};
+
+	state = { hoverPoint: null };
+
 	render() {
 		return (
 			<div
@@ -24,7 +32,11 @@ class SeaMap extends Component {
 					width: `${this.myWidth}px`,
 					height: `${this.myHeight}px`
 				}}
-				onClick={this.props.onClickOnMap}
+				onClick={this.handleLocalClickOnMap.bind(this)}
+				onMouseMove={this.handleHoverOverMap.bind(this)}
+				ref={input => {
+					this.refToWrapper = input;
+				}}
 			>
 				<svg
 					height={`${this.myHeight}`}
@@ -36,6 +48,8 @@ class SeaMap extends Component {
 					{this.renderSourcePoint()}
 					{this.renderDestinationPoint()}
 					{this.renderShortestPath()}
+					{this.renderPathOfIcebergInCreation()}
+					{this.renderHoverLine()}
 				</svg>
 			</div>
 		);
@@ -64,6 +78,41 @@ class SeaMap extends Component {
 			});
 		} else {
 			return null;
+		}
+	}
+
+	componentWillUpdate(nextProps, nextState) {
+		if (nextProps.pathForNewIceberg == null) {
+			if (this.state.hoverPoint != null) {
+				this.setState({ hoverPoint: null });
+			}
+		}
+	}
+
+	handleHoverOverMap(evt) {
+		if (
+			this.props.pathForNewIceberg != null &&
+			this.props.pathForNewIceberg.length > 0
+		) {
+			let myRect = this.refToWrapper.getBoundingClientRect();
+			let hoverCoord = {
+				x: evt.clientX - myRect.x,
+				y: myRect.height - (evt.clientY - myRect.y)
+			};
+			this.setState({
+				hoverPoint: hoverCoord
+			});
+		}
+	}
+
+	handleLocalClickOnMap(evt) {
+		if (this.refToWrapper != null) {
+			let myRect = this.refToWrapper.getBoundingClientRect();
+			let passedPoint = {
+				x: evt.clientX - myRect.x,
+				y: myRect.height - (evt.clientY - myRect.y)
+			};
+			this.props.onClickOnMap(evt, passedPoint);
 		}
 	}
 
@@ -126,6 +175,53 @@ class SeaMap extends Component {
 				<polyline
 					points={pointListStr}
 					style={this.styleForShortestPath}
+				/>
+			);
+		} else {
+			return null;
+		}
+	}
+
+	renderPathOfIcebergInCreation() {
+		if (
+			this.props != null &&
+			this.props.pathForNewIceberg != null &&
+			this.props.pathForNewIceberg.length > 0
+		) {
+			let pointListStr = this.props.pathForNewIceberg.reduce(
+				(prevStrVal, curPoint) => {
+					return prevStrVal + `${curPoint.x},${curPoint.y} `;
+				},
+				""
+			);
+			return (
+				<polyline
+					points={pointListStr}
+					style={this.styleForIcebergInCreation}
+				/>
+			);
+		} else {
+			return null;
+		}
+	}
+
+	renderHoverLine() {
+		if (
+			this.props != null &&
+			this.props.pathForNewIceberg != null &&
+			this.props.pathForNewIceberg.length > 0 &&
+			this.state.hoverPoint != null
+		) {
+			let lastPoint = this.props.pathForNewIceberg[
+				this.props.pathForNewIceberg.length - 1
+			];
+			return (
+				<line
+					x1={lastPoint.x.toString()}
+					y1={lastPoint.y.toString()}
+					x2={this.state.hoverPoint.x.toString()}
+					y2={this.state.hoverPoint.y.toString()}
+					style={this.styleForIcebergInCreation}
 				/>
 			);
 		} else {

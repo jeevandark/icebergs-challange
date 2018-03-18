@@ -3,6 +3,7 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import { RaisedButton, Dialog, IconButton } from "material-ui";
 import PathEditor from "./PathEditor";
 import PointEditor from "./PointEditor";
+import OverlayPrompt from "./OverlayPrompt";
 
 class ControlPanel extends Component {
 	myWidth = this.props.width == null ? 600 : this.props.width;
@@ -12,7 +13,9 @@ class ControlPanel extends Component {
 
 	state = {
 		alertMissingParamsIsOpen: false,
-		alertApproveRemoveIcebergWhenRemovingOneOfOnlyThreePoints: false
+		alertApproveRemoveIcebergWhenRemovingOneOfOnlyThreePoints: false,
+		alertConfirmClearAll: false,
+		overlayMessage: null
 	};
 
 	handleFindShortestPathClick = () => {
@@ -50,6 +53,21 @@ class ControlPanel extends Component {
 		});
 	};
 
+	handleApproveClearAllIcebergs = () => {
+		this.setState({ alertConfirmClearAll: false });
+		this.props.onClearAllIcebergs();
+	};
+
+	handleCancelClearAllIcebergs = () => {
+		this.setState({ alertConfirmClearAll: false });
+	};
+
+	handleClearAllIcebergClick = () => {
+		if (this.props != null && this.props.icebergs != null) {
+			this.setState({ alertConfirmClearAll: true });
+		}
+	};
+
 	render() {
 		const actionsMissingParamsAlert = [
 			<RaisedButton
@@ -74,12 +92,23 @@ class ControlPanel extends Component {
 				)}
 			/>
 		];
+		const actionsPromptClearAllIcebergs = [
+			<RaisedButton
+				label="Cancel"
+				onClick={this.handleCancelClearAllIcebergs}
+			/>,
+			<RaisedButton
+				label="Yes"
+				secondary={true}
+				onClick={this.handleApproveClearAllIcebergs.bind(this)}
+			/>
+		];
 		const resultPanelClassNames = `result-panel ${
 			this.props.shortestPath != null ? "shown" : ""
 		}`;
 		return (
 			<MuiThemeProvider>
-				<div>
+				<div className="panels-wrapper">
 					<div className="control-panel" style={this.mainStyle}>
 						{this.renderIcebergPanel()}
 						<PathEditor
@@ -117,6 +146,10 @@ class ControlPanel extends Component {
 								actionsPromptRemoveIcebergWhenRemovingOneOfOnlyThreePoints
 							}
 							modal={false}
+							onRequestClose={
+								this
+									.handleCancelRemoveIcebergWhenRemovingOneOfOnlyThreePoints
+							}
 							open={
 								this.state
 									.alertApproveRemoveIcebergWhenRemovingOneOfOnlyThreePoints
@@ -126,6 +159,17 @@ class ControlPanel extends Component {
 								An iceberg cannot have less than three points.<br />
 								<br />
 								Whould you like to remove the selected iceberg?
+							</div>
+						</Dialog>
+						<Dialog
+							actions={actionsPromptClearAllIcebergs}
+							modal={false}
+							onRequestClose={this.handleCancelClearAllIcebergs}
+							open={this.state.alertConfirmClearAll}
+						>
+							<div className="alert-text">
+								Are you sure you want to clear the icebergs
+								list?
 							</div>
 						</Dialog>
 					</div>
@@ -138,6 +182,10 @@ class ControlPanel extends Component {
 							{this.renderShortestPath()}
 						</div>
 					</div>
+					<OverlayPrompt
+						message={this.props.overlayMessage}
+						onCancel={this.props.onCancelOverlayPrompt}
+					/>
 				</div>
 			</MuiThemeProvider>
 		);
@@ -146,12 +194,27 @@ class ControlPanel extends Component {
 	renderIcebergPanel() {
 		return (
 			<div className="iceberg-list">
+				<IconButton
+					iconClassName="material-icons"
+					tooltip="Add icebergs using clicks on the map"
+					tooltipPosition="top-center"
+					className="create-on-map-button"
+					onClick={this.props.onCreateIcebergOnMap}
+				>
+					add_location
+				</IconButton>
 				<div className="header-label">Icebergs</div>
 				<IconButton
 					iconClassName="material-icons"
 					tooltip="Clear all icebergs"
+					tooltipPosition="top-center"
 					className="clear-all-button"
-					onClick={this.props.onClearAllIcebergs}
+					disabled={
+						this.props == null ||
+						this.props.icebergs == null ||
+						this.props.icebergs.length === 0
+					}
+					onClick={this.handleClearAllIcebergClick}
 				>
 					clear_all
 				</IconButton>
@@ -171,7 +234,21 @@ class ControlPanel extends Component {
 						onClick={this.handleIcebergClick.bind(this, item)}
 						key={idx}
 						className={strClass}
-					>{`Iceberg #${idx + 1}`}</div>
+					>
+						<span className="iceberg-label">
+							{`Iceberg #${idx + 1}`}
+						</span>
+						<span className="point-buttons">
+							<IconButton
+								onClick={() => {
+									this.props.onIcebergModified(null, item);
+									this.props.onSelectedIcebergChange(null);
+								}}
+							>
+								<i className="material-icons">clear</i>
+							</IconButton>
+						</span>
+					</div>
 				);
 			});
 		} else {

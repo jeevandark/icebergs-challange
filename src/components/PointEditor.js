@@ -30,9 +30,7 @@ class PointEditor extends Component {
 		return (
 			<div className={strClass} onBlur={this.handleOnBlur.bind(this)}>
 				{this.renderLabel()}{" "}
-				{this.state.isInEdit &&
-				this.localx != null &&
-				this.localy != null
+				{this.state.isInEdit
 					? this.renderEditableCoordinates()
 					: this.renderCoordinates()}{" "}
 				{this.renderButtons()}
@@ -57,13 +55,17 @@ class PointEditor extends Component {
 									this.yInput.value.toString();
 						}
 						if (!areEqual && this.props.onChange != null) {
-							this.props.onChange(
-								{
-									x: parseFloat(this.xInput.value),
-									y: parseFloat(this.yInput.value)
-								},
-								this.props.point
-							);
+							let newPoint = {
+								x: parseFloat(this.xInput.value),
+								y: parseFloat(this.yInput.value)
+							};
+							if (isNaN(newPoint.x)) {
+								newPoint.x = 0;
+							}
+							if (isNaN(newPoint.y)) {
+								newPoint.y = 0;
+							}
+							this.props.onChange(newPoint, this.props.point);
 						}
 					}
 				}
@@ -155,10 +157,24 @@ class PointEditor extends Component {
 	renderButtons() {
 		return (
 			<span className="point-buttons">
-				{this.props.point != null && !this.state.isInEdit ? (
-					<IconButton onClick={this.props.onClearClick}>
-						<i className="material-icons">clear</i>
-					</IconButton>
+				{!this.state.isInEdit ? (
+					<span>
+						{/* <IconButton
+							onClick={evt => {
+								if (this.props.onSetPointViaTheMap != null)
+									this.props.onSetPointViaTheMap(
+										this.props.point
+									);
+							}}
+						>
+							<i className="material-icons">edit_location</i>
+						</IconButton> */}
+						{this.props.point != null ? (
+							<IconButton onClick={this.props.onClearClick}>
+								<i className="material-icons">clear</i>
+							</IconButton>
+						) : null}
+					</span>
 				) : null}
 			</span>
 		);

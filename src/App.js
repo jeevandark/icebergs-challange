@@ -3,6 +3,7 @@ import SeaMap from "./components/SeaMap";
 import "./App.css";
 import ControlPanel from "./components/ControlPanel";
 import { demoData } from "./demoData";
+import pointInPolygon from "point-in-polygon";
 
 class App extends Component {
 	static kMapHeight = 600;
@@ -109,6 +110,7 @@ class App extends Component {
 					shortestPath={this.state.shortestPath}
 					selectedIceberg={this.state.selectedIceberg}
 					onClickOnMap={this.handleClickOnMap.bind(this)}
+					pathForNewIceberg={this.state.pathForNewIceberg}
 				/>
 				<ControlPanel
 					width={App.kMapAndControlPanelWidth}
@@ -126,9 +128,24 @@ class App extends Component {
 						this
 					)}
 					onClearAllIcebergs={this.handleClearAllIcebergs.bind(this)}
+					onCreateIcebergOnMap={this.handleCreateIcebergOnMap.bind(
+						this
+					)}
+					overlayMessage={this.state.overlayMessage}
+					onCancelOverlayPrompt={this.handleCancelOverlayPrompt.bind(
+						this
+					)}
 				/>
 			</div>
 		);
+	}
+
+	handleCancelOverlayPrompt() {
+		this.setState({
+			overlayMessage: null,
+			createIcebergMode: false,
+			pathForNewIceberg: []
+		});
 	}
 
 	handleFromPointChange(newVal) {
@@ -167,24 +184,130 @@ class App extends Component {
 		});
 	}
 
-	handleClickOnMap(evt) {
-		if (evt.target.tagName === "polygon") {
-			let pntStr = evt.target.getAttribute("points");
-			for (const ice of this.state.icebergs) {
-				let chkStr = ice.points.reduce((prevVal, curVal, curIdx) => {
-					return `${prevVal}${curIdx > 0 ? " " : ""}${curVal.x},${
-						curVal.y
-					}`;
-				}, "");
-				let isTheSame = pntStr === chkStr;
-				if (isTheSame) {
-					this.setState({
-						selectedIceberg: ice
-					});
-					break;
+	handleCreateIcebergOnMap() {
+		this.setState({
+			overlayMessage: "Click the map to create new icebergs",
+			createIcebergMode: true
+		});
+	}
+
+	handleClickOnMap(evt, coords) {
+		let isInsideAnIceberg = evt.target.tagName === "polygon";
+		let isInSourceOrDestinationPoints = evt.target.tagName === "circle";
+		if (this.state.createIcebergMode) {
+			if (isInsideAnIceberg || isInSourceOrDestinationPoints) {
+				alert("Point cannot be set there. Please try again");
+			} else {
+				const gapXThreshold = 5;
+				const gapYThreshold = 6;
+				let idxOfExistingPoint = -1;
+				if (this.state.pathForNewIceberg != null) {
+					idxOfExistingPoint = this.state.pathForNewIceberg.findIndex(
+						myPoint => {
+							let gapX = Math.abs(myPoint.x - coords.x);
+							let gapY = Math.abs(myPoint.y - coords.y);
+							return gapX < gapXThreshold && gapY < gapYThreshold;
+						}
+					);
+				}
+				if (idxOfExistingPoint >= 0) {
+					// if the click is "at" a point of the ghost-path:
+					let distanceFromEnd =
+						this.state.pathForNewIceberg.length -
+						idxOfExistingPoint;
+					if (distanceFromEnd >= 2) {
+						// remove redundant points at the beggining:
+						let closedPath = this.state.pathForNewIceberg.slice(
+							idxOfExistingPoint
+						);
+						// close the path:
+						let newIceList = [];
+						if (
+							this.state.icebergs != null &&
+							this.state.icebergs.length > 0
+						) {
+							newIceList = this.state.icebergs.slice();
+						}
+						let newIceberg = {
+							points: closedPath
+						};
+						newIceList.push(newIceberg);
+						this.setState({
+							pathForNewIceberg: null,
+							icebergs: newIceList,
+							selectedIceberg: newIceberg,
+							shortestPath: null
+						});
+					}
+				} else {
+					// not on the path - make sure that it does not break the convex-only limitation:
+					let breaksNoConvexLimitation = this.doesPointBreaksNoConvexLimitation(
+						coords
+					);
+					// also check the current ghost path is not crossed, and that no edge of any other iceberg is crossed
+					if (breaksNoConvexLimitation) {
+						// snackbar the user that non-convex iceberg polygons are not supported
+						alert(
+							"Non-convex iceberg polygons are not supported. Please try again"
+						);
+					} else {
+						// otherwise add the point to the ghost path:
+						let newPath =
+							this.state.pathForNewIceberg == null
+								? []
+								: this.state.pathForNewIceberg.slice();
+						newPath.push(coords);
+						this.setState({
+							pathForNewIceberg: newPath
+						});
+					}
+				}
+			}
+		} else {
+			// no special mode - process normally:
+			if (isInsideAnIceberg) {
+				let pntStr = evt.target.getAttribute("points");
+				for (const ice of this.state.icebergs) {
+					let chkStr = ice.points.reduce(
+						(prevVal, curVal, curIdx) => {
+							return `${prevVal}${curIdx > 0 ? " " : ""}${
+								curVal.x
+							},${curVal.y}`;
+						},
+						""
+					);
+					let isTheSame = pntStr === chkStr;
+					if (isTheSame) {
+						this.setState({
+							selectedIceberg: ice
+						});
+						break;
+					}
 				}
 			}
 		}
+	}
+
+	doesPointBreaksNoConvexLimitation(coords) {
+		let breaksNoConvexLimitation;
+		let numOfPointsInPath = 0;
+		if (this.state.pathForNewIceberg != null) {
+			numOfPointsInPath = this.state.pathForNewIceberg.length;
+		}
+		if (numOfPointsInPath < 3) {
+			breaksNoConvexLimitation = false;
+		} else {
+			let chkPoint = [coords.x, coords.y];
+			let chkPolygon = this.state.pathForNewIceberg.reduce(
+				(prevArr, curPoint) => {
+					prevArr.push([curPoint.x, curPoint.y]);
+					return prevArr;
+				},
+				[]
+			);
+			breaksNoConvexLimitation = pointInPolygon(chkPoint, chkPolygon);
+		}
+		return breaksNoConvexLimitation;
 	}
 }
 
