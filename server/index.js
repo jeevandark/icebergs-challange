@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const crossLines = require("./crossLines");
+const doLineSegmentsCross = require("do-line-segments-cross");
 const dijkstra = require("dijkstrajs");
 const find_path = dijkstra.find_path;
 
@@ -163,7 +163,7 @@ const doesCrossAnyEdge = (pt1, pt2, icebergList) => {
 				!isSamePoint(pt2, vtx1) &&
 				!isSamePoint(pt2, vtx2)
 			) {
-				retVal = crossLines.doLinesIntersect(pt1, pt2, vtx1, vtx2);
+				retVal = doLineSegmentsCross(pt1, pt2, vtx1, vtx2);
 			}
 		}
 		if (retVal) {
