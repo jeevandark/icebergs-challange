@@ -32,7 +32,10 @@ class App extends Component {
 				}
 			}
 		} else {
-			this.state = {};
+			this.state = {
+				snackbarVisible: false,
+				snackbarMessage: ""
+			};
 		}
 	}
 
@@ -72,6 +75,14 @@ class App extends Component {
 			App.keyForStateInSessionStorage,
 			JSON.stringify(nextState)
 		);
+	}
+
+	componentDidMount() {
+		document.addEventListener("keydown", this.handleKeyDown.bind(this));
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener("keydown", this.handleKeyDown.bind(this));
 	}
 
 	onCalcShortestPath = () => {
@@ -114,6 +125,7 @@ class App extends Component {
 					selectedIceberg={this.state.selectedIceberg}
 					onClickOnMap={this.handleClickOnMap.bind(this)}
 					pathForNewIceberg={this.state.pathForNewIceberg}
+					onCancelMouseOperation={this.handleCancelMouseOperation.bind(this)}
 				/>
 				<ControlPanel
 					width={App.kMapAndControlPanelWidth}
@@ -135,7 +147,7 @@ class App extends Component {
 						this
 					)}
 					overlayMessage={this.state.overlayMessage}
-					onCancelOverlayPrompt={this.handleCancelOverlayPrompt.bind(
+					onDoneWithlOverlayPrompt={this.handleDoneWithlOverlayPrompt.bind(
 						this
 					)}
 				/>
@@ -143,7 +155,7 @@ class App extends Component {
 					<Snackbar
 						open={this.state.snackbarVisible}
 						message={this.state.snackbarMessage}
-						autoHideDuration={9500}
+						autoHideDuration={1500}
 						className="snackbar-general"
 						onRequestClose={this.handleSnackbarCloseRequest.bind(
 							this
@@ -154,13 +166,24 @@ class App extends Component {
 		);
 	}
 
+	handleKeyDown(evt) {
+		if (evt.keyCode === 27) {
+			// esc
+			this.setState({
+				overlayMessage: null,
+				createIcebergMode: false,
+				pathForNewIceberg: []
+			});
+		}
+	}
+
 	handleSnackbarCloseRequest() {
 		this.setState({
 			snackbarVisible: false
 		});
 	}
 
-	handleCancelOverlayPrompt() {
+	handleDoneWithlOverlayPrompt() {
 		this.setState({
 			overlayMessage: null,
 			createIcebergMode: false,
@@ -189,10 +212,14 @@ class App extends Component {
 				newListOfIcebergs.splice(idxOfModified, 1);
 			}
 			this.setState({
-				icebergs: newListOfIcebergs,
-				shortestPath: null,
-				selectedIceberg: newIceberg
+				icebergs: newListOfIcebergs
 			});
+			setTimeout(() => {
+				this.setState({
+					selectedIceberg: null,
+					shortestPath: null
+				});
+			}, 200);
 		}
 	}
 
@@ -208,6 +235,14 @@ class App extends Component {
 		this.setState({
 			overlayMessage: "Click the map to create new icebergs",
 			createIcebergMode: true
+		});
+	}
+
+	handleCancelMouseOperation() {
+		this.setState({
+			overlayMessage: null,
+			createIcebergMode: false,
+			pathForNewIceberg: []
 		});
 	}
 

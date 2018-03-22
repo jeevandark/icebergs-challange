@@ -33,6 +33,8 @@ class SeaMap extends Component {
 					height: `${this.myHeight}px`
 				}}
 				onClick={this.handleLocalClickOnMap.bind(this)}
+				onMouseDown={this.handleMouseDownOnMap.bind(this)}
+				onContextMenu={(e) => {e.preventDefault()}}
 				onMouseMove={this.handleHoverOverMap.bind(this)}
 				ref={input => {
 					this.refToWrapper = input;
@@ -102,6 +104,16 @@ class SeaMap extends Component {
 			this.setState({
 				hoverPoint: hoverCoord
 			});
+		}
+	}
+
+	handleMouseDownOnMap(evt) {
+		if (evt.button === 2) {
+			// right-mouse-button:
+			if (this.props != null && this.props.onCancelMouseOperation != null) {
+				evt.preventDefault();
+				this.props.onCancelMouseOperation();
+			}
 		}
 	}
 

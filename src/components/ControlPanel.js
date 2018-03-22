@@ -184,7 +184,7 @@ class ControlPanel extends Component {
 					</div>
 					<OverlayPrompt
 						message={this.props.overlayMessage}
-						onCancel={this.props.onCancelOverlayPrompt}
+						onCancel={this.props.onDoneWithlOverlayPrompt}
 					/>
 				</div>
 			</MuiThemeProvider>
@@ -196,8 +196,7 @@ class ControlPanel extends Component {
 			<div className="iceberg-list">
 				<IconButton
 					iconClassName="material-icons"
-					tooltip="Add icebergs using clicks on the map"
-					tooltipPosition="top-center"
+					title="Add icebergs using clicks on the map"
 					className="create-on-map-button"
 					onClick={this.props.onCreateIcebergOnMap}
 				>
@@ -206,8 +205,7 @@ class ControlPanel extends Component {
 				<div className="header-label">Icebergs</div>
 				<IconButton
 					iconClassName="material-icons"
-					tooltip="Clear all icebergs"
-					tooltipPosition="top-center"
+					title="Clear all icebergs"
 					className="clear-all-button"
 					disabled={
 						this.props == null ||
