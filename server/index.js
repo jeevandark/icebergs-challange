@@ -147,7 +147,7 @@ const transformMapToGraph = dataSet => {
 	return retGraph;
 };
 
-// determines if the line between the given points crosses any existing edge in the graph:
+// determines if the line between the given points crosses any existing iceberg edge in the map:
 const doesCrossAnyEdge = (pt1, pt2, icebergList) => {
 	var retVal = false;
 	for (const iceberg of icebergList) {

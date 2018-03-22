@@ -3,7 +3,8 @@ import SeaMap from "./components/SeaMap";
 import "./App.css";
 import ControlPanel from "./components/ControlPanel";
 import { demoData } from "./demoData";
-import pointInPolygon from "point-in-polygon";
+// import pointInPolygon from "point-in-polygon";
+import doLineSegmentsCross from "do-line-segments-cross";
 
 class App extends Component {
 	static kMapHeight = 600;
@@ -192,14 +193,33 @@ class App extends Component {
 	}
 
 	handleClickOnMap(evt, coords) {
-		let isInsideAnIceberg = evt.target.tagName === "polygon";
-		let isInSourceOrDestinationPoints = evt.target.tagName === "circle";
 		if (this.state.createIcebergMode) {
-			if (isInsideAnIceberg || isInSourceOrDestinationPoints) {
+			// in create-icebergs mode
+			// check if the line to the newly clicked point crosses any edge in the map:
+			let doesCrossAnyIcebergEdgeInTheMap = false;
+			let isPathForNewIcebergHasAtleastOneEdge =
+				this.state.pathForNewIceberg != null &&
+				this.state.pathForNewIceberg.length > 0;
+			if (
+				this.state.icebergs != null &&
+				this.state.icebergs.length > 0 &&
+				isPathForNewIcebergHasAtleastOneEdge
+			) {
+				let lastPointInPath = this.state.pathForNewIceberg[
+					this.state.pathForNewIceberg.length - 1
+				];
+				doesCrossAnyIcebergEdgeInTheMap = this.doesCrossAnyEdge(
+					coords,
+					lastPointInPath,
+					this.state.icebergs
+				);
+			}
+			if (doesCrossAnyIcebergEdgeInTheMap) {
 				alert("Point cannot be set there. Please try again");
 			} else {
-				const gapXThreshold = 5;
-				const gapYThreshold = 6;
+				// see if the click was "on" any point in the iceberg (that is being created):
+				const gapXThreshold = 10; // proximity threshold for X
+				const gapYThreshold = 12; // proximity threshold for Y
 				let idxOfExistingPoint = -1;
 				if (this.state.pathForNewIceberg != null) {
 					idxOfExistingPoint = this.state.pathForNewIceberg.findIndex(
@@ -211,62 +231,92 @@ class App extends Component {
 					);
 				}
 				if (idxOfExistingPoint >= 0) {
-					// if the click is "at" a point of the ghost-path:
+					// the click was "on" a point in the path:
 					let distanceFromEnd =
 						this.state.pathForNewIceberg.length -
 						idxOfExistingPoint;
 					if (distanceFromEnd >= 2) {
-						// remove redundant points at the beggining:
-						let closedPath = this.state.pathForNewIceberg.slice(
-							idxOfExistingPoint
-						);
-						// close the path:
-						let newIceList = [];
+						// make sure that the closing line does not cross any iceberg's edge in the map:
+						let closingLineCrossesAnyEdge = false;
 						if (
 							this.state.icebergs != null &&
 							this.state.icebergs.length > 0
 						) {
-							newIceList = this.state.icebergs.slice();
+							closingLineCrossesAnyEdge = this.doesCrossAnyEdge(
+								this.state.pathForNewIceberg[
+									this.state.pathForNewIceberg.length - 1
+								],
+								this.state.pathForNewIceberg[
+									idxOfExistingPoint
+								],
+								this.state.icebergs
+							);
 						}
-						let newIceberg = {
-							points: closedPath
-						};
-						newIceList.push(newIceberg);
-						this.setState({
-							pathForNewIceberg: null,
-							icebergs: newIceList,
-							selectedIceberg: newIceberg,
-							shortestPath: null
-						});
+						if (closingLineCrossesAnyEdge) {
+							alert("Cannot cross other icebergs' ");
+						} else {
+							// remove redundant points at the beginning:
+							let closedPath = this.state.pathForNewIceberg.slice(
+								idxOfExistingPoint
+							);
+							// close the path:
+							let newIceList = [];
+							if (
+								this.state.icebergs != null &&
+								this.state.icebergs.length > 0
+							) {
+								newIceList = this.state.icebergs.slice();
+							}
+							let newIceberg = {
+								points: closedPath
+							};
+							newIceList.push(newIceberg);
+							this.setState({
+								pathForNewIceberg: null,
+								icebergs: newIceList,
+								selectedIceberg: newIceberg,
+								shortestPath: null
+							});
+						}
 					}
 				} else {
 					// not on the path - make sure that it does not break the convex-only limitation:
-					let breaksNoConvexLimitation = this.doesPointBreaksNoConvexLimitation(
+					let breaksConvexLimitation = this.doesPointBreakTheAllowOnlyConvexLimitation(
 						coords
 					);
 					// also check the current ghost path is not crossed, and that no edge of any other iceberg is crossed
-					if (breaksNoConvexLimitation) {
+					if (breaksConvexLimitation) {
 						// snackbar the user that non-convex iceberg polygons are not supported
 						alert(
 							"Non-convex iceberg polygons are not supported. Please try again"
 						);
 					} else {
-						// otherwise add the point to the ghost path:
-						let newPath =
-							this.state.pathForNewIceberg == null
-								? []
-								: this.state.pathForNewIceberg.slice();
-						newPath.push(coords);
-						this.setState({
-							pathForNewIceberg: newPath
-						});
+						let doesIntersectSelf = this.doesIntersectSelf(coords);
+						if (doesIntersectSelf) {
+							// self-intersecting polygons are not allowed:
+							alert(
+								"Self-intersecting polygons are not allowed as icebergs. Please try again"
+							);
+						} else {
+							// otherwise add the point to the ghost path:
+							let newPath =
+								this.state.pathForNewIceberg == null
+									? []
+									: this.state.pathForNewIceberg.slice();
+							newPath.push(coords);
+							this.setState({
+								pathForNewIceberg: newPath
+							});
+						}
 					}
 				}
 			}
 		} else {
 			// no special mode - process normally:
+			let isInsideAnIceberg = evt.target.tagName === "polygon";
 			if (isInsideAnIceberg) {
 				let pntStr = evt.target.getAttribute("points");
+				// try to find the clicked iceberg in the model:
 				for (const ice of this.state.icebergs) {
 					let chkStr = ice.points.reduce(
 						(prevVal, curVal, curIdx) => {
@@ -278,6 +328,7 @@ class App extends Component {
 					);
 					let isTheSame = pntStr === chkStr;
 					if (isTheSame) {
+						// found it - so set it as selected:
 						this.setState({
 							selectedIceberg: ice
 						});
@@ -288,26 +339,100 @@ class App extends Component {
 		}
 	}
 
-	doesPointBreaksNoConvexLimitation(coords) {
-		let breaksNoConvexLimitation;
+	doesIntersectSelf(coords) {
+		var doesIntersectSelf = false;
+		if (
+			this.state.pathForNewIceberg != null &&
+			this.state.pathForNewIceberg.length > 2
+		) {
+			for (
+				var x = 0;
+				x < this.state.pathForNewIceberg.length - 2 &&
+				!doesIntersectSelf;
+				x++
+			) {
+				let pt1 = this.state.pathForNewIceberg[x];
+				let pt2 = this.state.pathForNewIceberg[x + 1];
+				let pt3 = this.state.pathForNewIceberg[
+					this.state.pathForNewIceberg.length - 1
+				];
+				let pt4 = coords;
+				doesIntersectSelf = doLineSegmentsCross(pt1, pt2, pt3, pt4);
+			}
+		}
+		return doesIntersectSelf;
+	}
+
+	doesPointBreakTheAllowOnlyConvexLimitation(coords) {
+		let breaksTheAllowOnlyConvexLimitation;
 		let numOfPointsInPath = 0;
 		if (this.state.pathForNewIceberg != null) {
 			numOfPointsInPath = this.state.pathForNewIceberg.length;
 		}
 		if (numOfPointsInPath < 3) {
-			breaksNoConvexLimitation = false;
+			breaksTheAllowOnlyConvexLimitation = false;
 		} else {
-			let chkPoint = [coords.x, coords.y];
-			let chkPolygon = this.state.pathForNewIceberg.reduce(
-				(prevArr, curPoint) => {
-					prevArr.push([curPoint.x, curPoint.y]);
-					return prevArr;
-				},
-				[]
-			);
-			breaksNoConvexLimitation = pointInPolygon(chkPoint, chkPolygon);
+			let fullPolygon = this.state.pathForNewIceberg.slice();
+			fullPolygon.push(coords);
+			breaksTheAllowOnlyConvexLimitation = !this.isConvex(fullPolygon);
 		}
-		return breaksNoConvexLimitation;
+		return breaksTheAllowOnlyConvexLimitation;
+	}
+
+	isConvex(polygonToCheck) {
+		let retVal = true;
+		let firstResult = 0;
+		for (let z = 0; z < polygonToCheck.length && retVal; z++) {
+			let p = polygonToCheck[z];
+			let tmp = polygonToCheck[(z + 1) % polygonToCheck.length];
+			let v = {
+				x: tmp.x - p.x,
+				y: tmp.y - p.y
+			};
+			let u = polygonToCheck[(z + 2) % polygonToCheck.length];
+			if (z === 0) {
+				firstResult = u.x * v.y - u.y * v.x + v.x * p.y - v.y * p.x;
+			} else {
+				let newResult = u.x * v.y - u.y * v.x + v.x * p.y - v.y * p.x;
+				if (
+					(newResult > 0 && firstResult < 0) ||
+					(newResult < 0 && firstResult > 0)
+				) {
+					retVal = false;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	// determines if the line between the given points crosses any existing iceberg edge in the map:
+	doesCrossAnyEdge(pt1, pt2, icebergList) {
+		var retVal = false;
+		for (const iceberg of icebergList) {
+			for (var v = 0; v < iceberg.points.length && !retVal; v++) {
+				var vtx1 = iceberg.points[v];
+				var vtx2 =
+					v === iceberg.points.length - 1
+						? iceberg.points[0]
+						: iceberg.points[v + 1];
+				if (
+					!this.isSamePoint(pt1, vtx1) &&
+					!this.isSamePoint(pt1, vtx2) &&
+					!this.isSamePoint(pt2, vtx1) &&
+					!this.isSamePoint(pt2, vtx2)
+				) {
+					retVal = doLineSegmentsCross(pt1, pt2, vtx1, vtx2);
+				}
+			}
+			if (retVal) {
+				break;
+			}
+		}
+		return retVal;
+	}
+
+	isSamePoint(pt1, pt2) {
+		return pt1.x === pt2.x && pt1.y === pt2.y;
 	}
 }
 
