@@ -5,6 +5,8 @@ import ControlPanel from "./components/ControlPanel";
 import { demoData } from "./demoData";
 // import pointInPolygon from "point-in-polygon";
 import doLineSegmentsCross from "do-line-segments-cross";
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import { Snackbar } from "material-ui";
 
 class App extends Component {
 	static kMapHeight = 600;
@@ -137,8 +139,25 @@ class App extends Component {
 						this
 					)}
 				/>
+				<MuiThemeProvider>
+					<Snackbar
+						open={this.state.snackbarVisible}
+						message={this.state.snackbarMessage}
+						autoHideDuration={9500}
+						className="snackbar-general"
+						onRequestClose={this.handleSnackbarCloseRequest.bind(
+							this
+						)}
+					/>
+				</MuiThemeProvider>
 			</div>
 		);
+	}
+
+	handleSnackbarCloseRequest() {
+		this.setState({
+			snackbarVisible: false
+		});
 	}
 
 	handleCancelOverlayPrompt() {
@@ -215,7 +234,11 @@ class App extends Component {
 				);
 			}
 			if (doesCrossAnyIcebergEdgeInTheMap) {
-				alert("Point cannot be set there. Please try again");
+				this.setState({
+					snackbarVisible: true,
+					snackbarMessage:
+						"Point cannot be set there... Please try again"
+				});
 			} else {
 				// see if the click was "on" any point in the iceberg (that is being created):
 				const gapXThreshold = 10; // proximity threshold for X
@@ -236,48 +259,26 @@ class App extends Component {
 						this.state.pathForNewIceberg.length -
 						idxOfExistingPoint;
 					if (distanceFromEnd >= 2) {
-						// make sure that the closing line does not cross any iceberg's edge in the map:
-						let closingLineCrossesAnyEdge = false;
+						// remove redundant points at the beginning:
+						let closedPath = this.state.pathForNewIceberg.slice(
+							idxOfExistingPoint
+						);
+						// close the path:
+						let newIceList = [];
 						if (
 							this.state.icebergs != null &&
 							this.state.icebergs.length > 0
 						) {
-							closingLineCrossesAnyEdge = this.doesCrossAnyEdge(
-								this.state.pathForNewIceberg[
-									this.state.pathForNewIceberg.length - 1
-								],
-								this.state.pathForNewIceberg[
-									idxOfExistingPoint
-								],
-								this.state.icebergs
-							);
+							newIceList = this.state.icebergs.slice();
 						}
-						if (closingLineCrossesAnyEdge) {
-							alert("Cannot cross other icebergs' ");
-						} else {
-							// remove redundant points at the beginning:
-							let closedPath = this.state.pathForNewIceberg.slice(
-								idxOfExistingPoint
-							);
-							// close the path:
-							let newIceList = [];
-							if (
-								this.state.icebergs != null &&
-								this.state.icebergs.length > 0
-							) {
-								newIceList = this.state.icebergs.slice();
-							}
-							let newIceberg = {
-								points: closedPath
-							};
-							newIceList.push(newIceberg);
-							this.setState({
-								pathForNewIceberg: null,
-								icebergs: newIceList,
-								selectedIceberg: newIceberg,
-								shortestPath: null
-							});
-						}
+						let newIceberg = { points: closedPath };
+						newIceList.push(newIceberg);
+						this.setState({
+							pathForNewIceberg: null,
+							icebergs: newIceList,
+							selectedIceberg: newIceberg,
+							shortestPath: null
+						});
 					}
 				} else {
 					// not on the path - make sure that it does not break the convex-only limitation:
@@ -286,17 +287,21 @@ class App extends Component {
 					);
 					// also check the current ghost path is not crossed, and that no edge of any other iceberg is crossed
 					if (breaksConvexLimitation) {
-						// snackbar the user that non-convex iceberg polygons are not supported
-						alert(
-							"Non-convex iceberg polygons are not supported. Please try again"
-						);
+						// snackbar the user that non-convex iceberg polygons are not supported!
+						this.setState({
+							snackbarVisible: true,
+							snackbarMessage:
+								"Non-convex or complex iceberg polygons are not supported... Please try again"
+						});
 					} else {
 						let doesIntersectSelf = this.doesIntersectSelf(coords);
 						if (doesIntersectSelf) {
-							// self-intersecting polygons are not allowed:
-							alert(
-								"Self-intersecting polygons are not allowed as icebergs. Please try again"
-							);
+							// self-intersecting polygons are not allowed!
+							this.setState({
+								snackbarVisible: true,
+								snackbarMessage:
+									"Self-intersecting iceberg polygons are not allowed... Please try again"
+							});
 						} else {
 							// otherwise add the point to the ghost path:
 							let newPath =

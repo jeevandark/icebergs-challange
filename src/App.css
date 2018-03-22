@@ -1,392 +1,401 @@
 .App {
-	text-align: center;
-	width: 100%;
-	color: #666666;
+    text-align: center;
+    width: 100%;
+    color: #666666;
 }
 
 .svg-wrapper {
-	background-color: lightblue;
-	margin: 5px auto 10px auto;
-	border: 1px solid darkgray;
-	border-radius: 3px;
-	user-select: none;
+    background-color: lightblue;
+    margin: 5px auto 10px auto;
+    border: 1px solid darkgray;
+    border-radius: 3px;
+    user-select: none;
 }
 
-.svg-wrapper > svg {
-	transform-origin: 50% 50%;
-	transform: scale(1, -1);
+.svg-wrapper>svg {
+    transform-origin: 50% 50%;
+    transform: scale(1, -1);
 }
 
 input {
-	color: #555555;
+    color: #555555;
 }
 
 .panels-wrapper {
-	position: relative;
+    position: relative;
 }
 
 .control-panel {
-	margin: 0 auto;
-	position: relative;
-	height: 162px;
-	user-select: none;
+    margin: 0 auto;
+    position: relative;
+    height: 162px;
+    user-select: none;
 }
 
 .control-panel .iceberg-list {
-	width: 50%;
-	border: 1px solid lightgray;
-	border-radius: 3px;
-	height: 160px;
-	position: absolute;
-	left: -1px;
+    width: 50%;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    height: 160px;
+    position: absolute;
+    left: -1px;
 }
 
 .control-panel .iceberg-list .header-label {
-	text-align: left;
-	padding-left: 43px;
+    text-align: left;
+    padding-left: 43px;
 }
 
 .control-panel .iceberg-list .clear-all-button {
-	position: absolute !important;
-	top: 0 !important;
-	right: 0 !important;
-	padding: 2px !important;
-	width: 38px !important;
-	height: 28px !important;
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    padding: 2px !important;
+    width: 38px !important;
+    height: 28px !important;
 }
 
 .control-panel .iceberg-list .create-on-map-button {
-	position: absolute !important;
-	top: 0 !important;
-	left: 0 !important;
-	padding: 2px !important;
-	width: 38px !important;
-	height: 28px !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    padding: 2px !important;
+    width: 38px !important;
+    height: 28px !important;
 }
 
 .control-panel .iceberg-list .inner-list {
-	position: absolute;
-	top: 30px;
-	left: 0;
-	bottom: 0;
-	border-right: 1px solid gainsboro;
-	width: 45%;
-	overflow-y: auto;
+    position: absolute;
+    top: 30px;
+    left: 0;
+    bottom: 0;
+    border-right: 1px solid gainsboro;
+    width: 45%;
+    overflow-y: auto;
 }
 
 .control-panel .iceberg-list .iceberg-entry {
-	padding: 3px 5px 0 5px;
-	text-align: left;
-	font-size: 14px;
-	line-height: 15px;
-	cursor: pointer;
-	user-select: none;
+    padding: 3px 5px 0 5px;
+    text-align: left;
+    font-size: 14px;
+    line-height: 15px;
+    cursor: pointer;
+    user-select: none;
 }
 
 .control-panel .iceberg-list .iceberg-entry.selected {
-	background-color: #d9e8ec;
+    background-color: #d9e8ec;
 }
 
 .control-panel .iceberg-list .iceberg-label {
-	margin-right: 24px;
-	position: relative;
-	top: 1px;
+    margin-right: 24px;
+    position: relative;
+    top: 1px;
 }
 
 .control-panel .iceberg-list .point-buttons button {
-	top: -1px;
+    top: -1px;
 }
 
 .control-panel .iceberg-list .point-buttons .material-icons {
-	line-height: 0px !important;
-	top: 6px;
-	left: -4px;
+    line-height: 0px !important;
+    top: 6px;
+    left: -4px;
 }
 
 .header-label {
-	font-size: 18px;
-	line-height: 24px;
-	padding: 2px 3px;
-	background-color: gainsboro;
-	color: gray;
-	font-size: bold;
-	user-select: none;
+    font-size: 18px;
+    line-height: 24px;
+    padding: 2px 3px;
+    background-color: gainsboro;
+    color: gray;
+    font-size: bold;
+    user-select: none;
 }
 
 .control-panel .path-editor {
-	width: 49%;
-	border: 1px solid lightgray;
-	border-radius: 3px;
-	height: 120px;
-	position: absolute;
-	right: 0;
-	text-align: left;
+    width: 49%;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    height: 120px;
+    position: absolute;
+    right: 0;
+    text-align: left;
 }
 
 .path-editor .header-label {
-	text-align: center;
+    text-align: center;
 }
 
 .control-panel .buttons-pad {
-	width: 49%;
-	border-radius: 3px;
-	height: 36px;
-	position: absolute;
-	right: 0;
-	bottom: 0;
+    width: 49%;
+    border-radius: 3px;
+    height: 36px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
 }
 
 .control-panel .buttons-pad .demo-button {
-	color: #666666 !important;
-	position: relative;
-	left: -2px;
-	width: 107px;
-	top: -1px;
+    color: #666666 !important;
+    position: relative;
+    left: -2px;
+    width: 107px;
+    top: -1px;
 }
 
 .control-panel .buttons-pad .demo-button button {
-	height: 35px !important;
-	width: 107px !important;
+    height: 35px !important;
+    width: 107px !important;
 }
 
 .control-panel .buttons-pad .demo-button button span {
-	color: #666666 !important;
+    color: #666666 !important;
 }
 
 .control-panel .buttons-pad .fsp-button {
-	color: #666666 !important;
-	right: -2px;
-	position: relative;
-	top: -1px;
+    color: #666666 !important;
+    right: -2px;
+    position: relative;
+    top: -1px;
 }
 
 .point-editor-label {
-	display: inline-block;
-	min-width: 80px;
+    display: inline-block;
+    min-width: 80px;
 }
 
 .point-editor {
-	padding-left: 50px;
-	height: 36px;
-	line-height: 36px;
-	white-space: nowrap;
+    padding-left: 50px;
+    height: 36px;
+    line-height: 36px;
+    white-space: nowrap;
 }
 
 .point-editor:nth-child(2) {
-	margin-top: 10px;
+    margin-top: 10px;
 }
 
 .point-coordinates,
 .point-editor-label {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .point-coordinates {
-	position: relative;
-	top: 1px;
-	margin-right: 6px;
+    position: relative;
+    top: 1px;
+    margin-right: 6px;
 }
 
 .editable-coordinate {
-	width: 34px;
-	font-size: 14px;
+    width: 34px;
+    font-size: 14px;
 }
 
 .point-editor.is-null .point-editor-label,
 .point-editor.is-null .point-coordinates {
-	color: #bbbbbb;
+    color: #bbbbbb;
 }
 
 @keyframes fade-in {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 0.5;
-	}
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.5;
+    }
 }
 
 .point-buttons {
-	animation: 300ms fade-in ease-in backwards;
+    animation: 300ms fade-in ease-in backwards;
 }
 
 .point-buttons .material-icons {
-	transition: 300ms opacity ease;
-	opacity: 0.5;
+    transition: 300ms opacity ease;
+    opacity: 0.5;
 }
 
 .point-buttons .material-icons:hover {
-	opacity: 1;
+    opacity: 1;
 }
 
 .point-buttons button {
-	padding: 2px !important;
-	color: #999999;
-	height: 20px !important;
-	line-height: 20px !important;
-	width: 20px !important;
-	top: 6px;
+    padding: 2px !important;
+    color: #999999;
+    height: 20px !important;
+    line-height: 20px !important;
+    width: 20px !important;
+    top: 6px;
 }
 
 .point-buttons i.material-icons {
-	height: 24px;
-	width: 24px;
-	position: relative;
-	top: -1px;
-	left: -4px;
-	font-size: 17px;
+    height: 24px;
+    width: 24px;
+    position: relative;
+    top: -1px;
+    left: -4px;
+    font-size: 17px;
 }
 
 .point-editor.is-null .point-buttons i.material-icons {
-	height: 24px;
-	width: 24px;
+    height: 24px;
+    width: 24px;
 }
 
 .alert-text {
-	text-align: center;
-	font-weight: bold;
+    text-align: center;
+    font-weight: bold;
 }
 
 .points-list {
-	display: inline-block;
-	width: 55%;
-	position: absolute;
-	right: 0;
-	bottom: 0;
-	top: 26px;
-	overflow-y: auto;
+    display: inline-block;
+    width: 55%;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    top: 26px;
+    overflow-y: auto;
 }
 
 .points-list .point-editor {
-	font-size: 14px;
-	padding-left: 10px;
-	line-height: 20px;
-	height: 20px;
-	text-align: left;
+    font-size: 14px;
+    padding-left: 10px;
+    line-height: 20px;
+    height: 20px;
+    text-align: left;
 }
 
 .points-list .point-editor .editable-coordinate {
-	font-size: 13px;
-	padding: 0 !important;
+    font-size: 13px;
+    padding: 0 !important;
 }
 
 .points-list .point-editor .point-buttons button {
-	height: 18px !important;
-	line-height: 18px !important;
-	width: 20px !important;
-	top: 6px;
+    height: 18px !important;
+    line-height: 18px !important;
+    width: 20px !important;
+    top: 6px;
 }
 
 .points-list .point-editor .point-buttons i.material-icons {
-	position: relative;
-	top: -1px;
-	left: -4px;
-	font-size: 15px;
+    position: relative;
+    top: -1px;
+    left: -4px;
+    font-size: 15px;
 }
 
 .points-list .point-editor:nth-child(2) {
-	margin-top: 0;
+    margin-top: 0;
 }
 
 .result-panel {
-	clear: both;
-	display: block;
-	margin: 0 auto;
-	position: relative;
-	top: 3px;
-	height: 70px;
-	border: 1px solid gainsboro;
-	opacity: 0;
-	transition: 350ms opacity ease;
+    clear: both;
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    top: 3px;
+    height: 70px;
+    border: 1px solid gainsboro;
+    opacity: 0;
+    transition: 350ms opacity ease;
 }
 
 .result-panel.shown {
-	opacity: 1;
+    opacity: 1;
 }
 
 .result-panel .header-label {
-	text-align: left;
-	padding-left: 50px;
+    text-align: left;
+    padding-left: 50px;
 }
 
 .result-content {
-	text-align: left;
-	padding: 3px 5px;
-	font-size: 15px;
-	overflow-y: auto;
+    text-align: left;
+    padding: 3px 5px;
+    font-size: 15px;
+    overflow-y: auto;
 }
 
 .clear-all-button .material-icons {
-	color: gray !important;
+    color: gray !important;
 }
 
 .create-on-map-button .material-icons {
-	color: rgb(148, 148, 148) !important;
-	font-size: 22px !important;
+    color: rgb(148, 148, 148) !important;
+    font-size: 22px !important;
 }
 
 @keyframes expand-in {
-	from {
-		opacity: 0;
-		transform: scale(0, 0);
-	}
-	to {
-		transform: scale(1, 1);
-		opacity: 0.82;
-	}
+    from {
+        opacity: 0;
+        transform: scale(0, 0);
+    }
+    to {
+        transform: scale(1, 1);
+        opacity: 0.82;
+    }
 }
 
 .overlay-prompt-wrapper {
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	padding-top: 30px;
-	background-color: white;
-	animation: 260ms expand-in ease-out both;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding-top: 30px;
+    background-color: white;
+    animation: 260ms expand-in ease-out both;
 }
+
+.snackbar-general {
+    opacity: 0.8;
+}
+
+.snackbar-general>div {
+    background-color: crimson !important;
+}
+
 
 /* scrollbar styling: */
 
 ::-webkit-scrollbar {
-	width: 8px;
-	height: 8px;
+    width: 8px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-button {
-	width: 6px;
-	height: 6px;
+    width: 6px;
+    height: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
-	background: #e1e1e1;
-	border: 0px none #ffffff;
-	border-radius: 3px;
+    background: #e1e1e1;
+    border: 0px none #ffffff;
+    border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background: #e5e5e5;
+    background: #e5e5e5;
 }
 
 ::-webkit-scrollbar-thumb:active {
-	background: #bbbbbb;
+    background: #bbbbbb;
 }
 
 ::-webkit-scrollbar-track {
-	background: #999999;
-	border: 0px none #ffffff;
-	border-radius: 3px;
+    background: #999999;
+    border: 0px none #ffffff;
+    border-radius: 3px;
 }
 
 ::-webkit-scrollbar-track:hover {
-	background: #999999;
+    background: #999999;
 }
 
 ::-webkit-scrollbar-track:active {
-	background: #999999;
+    background: #999999;
 }
 
 ::-webkit-scrollbar-corner {
-	background: transparent;
+    background: transparent;
 }
