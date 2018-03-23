@@ -13,6 +13,7 @@ class App extends Component {
 	static kMapAndControlPanelWidth = 600;
 	static keyForStateInSessionStorage = "keyState";
 	static pathToApiFSPEndpoint = "http://localhost:4000/fsp/";
+	static defaultSnackbarDelay = 1500;
 
 	constructor() {
 		super();
@@ -34,7 +35,8 @@ class App extends Component {
 		} else {
 			this.state = {
 				snackbarVisible: false,
-				snackbarMessage: ""
+				snackbarMessage: "",
+				snackbarDelay: App.defaultSnackbarDelay
 			};
 		}
 	}
@@ -100,6 +102,7 @@ class App extends Component {
 				if (response.ok) {
 					return response.json();
 				} else {
+					console.log("stage 1");
 					return null;
 				}
 			})
@@ -108,6 +111,14 @@ class App extends Component {
 					// todo: prompt the user that en error had occurred
 				}
 				this.setState({ shortestPath: result });
+			})
+			.catch(e => {
+				this.setState({
+					snackbarVisible: true,
+					snackbarMessage:
+						"Network error. Make sure the server is up and running",
+					snackbarDelay: 3000
+				});
 			});
 	};
 
@@ -125,7 +136,9 @@ class App extends Component {
 					selectedIceberg={this.state.selectedIceberg}
 					onClickOnMap={this.handleClickOnMap.bind(this)}
 					pathForNewIceberg={this.state.pathForNewIceberg}
-					onCancelMouseOperation={this.handleCancelMouseOperation.bind(this)}
+					onCancelMouseOperation={this.handleCancelMouseOperation.bind(
+						this
+					)}
 				/>
 				<ControlPanel
 					width={App.kMapAndControlPanelWidth}
@@ -155,7 +168,7 @@ class App extends Component {
 					<Snackbar
 						open={this.state.snackbarVisible}
 						message={this.state.snackbarMessage}
-						autoHideDuration={1500}
+						autoHideDuration={this.state.snackbarDelay}
 						className="snackbar-general"
 						onRequestClose={this.handleSnackbarCloseRequest.bind(
 							this
@@ -179,7 +192,8 @@ class App extends Component {
 
 	handleSnackbarCloseRequest() {
 		this.setState({
-			snackbarVisible: false
+			snackbarVisible: false,
+			snackbarDelay: App.defaultSnackbarDelay
 		});
 	}
 
@@ -326,7 +340,8 @@ class App extends Component {
 						this.setState({
 							snackbarVisible: true,
 							snackbarMessage:
-								"Non-convex or complex iceberg polygons are not supported... Please try again"
+								"Non-convex or complex iceberg polygons are not supported",
+							snackbarDelay: 2000
 						});
 					} else {
 						let doesIntersectSelf = this.doesIntersectSelf(coords);
@@ -335,7 +350,8 @@ class App extends Component {
 							this.setState({
 								snackbarVisible: true,
 								snackbarMessage:
-									"Self-intersecting iceberg polygons are not allowed... Please try again"
+									"Self-intersecting iceberg polygons are not allowed",
+								snackbarDelay: 2000
 							});
 						} else {
 							// otherwise add the point to the ghost path:
